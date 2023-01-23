@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TabmateRelay.Properties;
 
 namespace TabmateRelay {
     public partial class MainForm : Form {
@@ -21,15 +22,18 @@ namespace TabmateRelay {
         // These identify the tabmate
         public const uint TABMATE_PRODUCT_ID = 0x8502;
         public const uint TABMATE_VENDOR_ID = 0x0a5c;
+        public ushort usagePage = 1;
+        public ushort usageCollection = 5;
         private static ScrolledTextDialog logDialog;
-        private Input tabmateDevice;
+        //private Input tabmateDevice;
 
         // Use explicit SharpLib.Hid to avoid collision with Utils, Event, ...
         private SharpLib.Hid.Handler handler;
 
         // Use this to call the handler on the UI thread
         public delegate void OnHidEventDelegate(object sender, SharpLib.Hid.Event aHidEvent);
-        // Avoid logging too many events otherwise we just hang when testing high frequency device like Virpil joysticks and Oculus Rift S
+        // Avoid logging too many events, otherwise we just hang when testing
+        // high frequency device like Virpil joysticks and Oculus Rift S
         DateTime logPeriodStartTime;
         int eventCount;
         const int MAX_EVENTS_PER_PERIOD = 10;
@@ -37,6 +41,9 @@ namespace TabmateRelay {
 
         public MainForm() {
             InitializeComponent();
+
+            usagePage = Settings.Default.UsagePage;
+            usageCollection = Settings.Default.UsageCollection;
 
             logDialog = new ScrolledTextDialog(
             Utils.getDpiAdjustedSize(this, new Size(600, 400)),
@@ -47,21 +54,13 @@ namespace TabmateRelay {
 
 
             //getHidDeviceList();
-            InitializeBluetooth();
+            //InitializeBluetooth();
             StartTabmate();
             ShowLogDialogInFront();
         }
 
         public void StartTabmate() {
-            tabmateDevice = null;
             LogAppendTextAndNL($"{NL} {Timestamp()} Starting Tabmate");
-            Input input = FindTabmate();
-            if (input == null) {
-                LogAppendTextAndNL($"{NL} {Timestamp()} Starting Tabmate: Tabmate not found");
-                return;
-            }
-            LogAppendTextAndNL($"{NL} {Timestamp()} Tabmate found: Start listening...");
-            tabmateDevice = input;
             // Dispose of any existing handler
             if (handler != null) {
                 handler.Dispose();
@@ -70,8 +69,8 @@ namespace TabmateRelay {
 
             // Make a RAWINPUTDEVICE array with one item
             RAWINPUTDEVICE[] rid = new RAWINPUTDEVICE[1];
-            rid[0].usUsagePage = input.UsagePage;
-            rid[0].usUsage = input.UsageCollection;
+            rid[0].usUsagePage = usagePage;
+            rid[0].usUsage = usageCollection;
             // Default is 0, needs to be added to work when not in focus
             rid[0].dwFlags = RawInputDeviceFlags.RIDEV_INPUTSINK;
             rid[0].hwndTarget = Handle;
@@ -124,8 +123,17 @@ namespace TabmateRelay {
 
         public void ProcessEvent(SharpLib.Hid.Event hidEvent) {
             DateTime time = hidEvent.Time;
+            // Be sure it coms for the Tabmate
+            if (hidEvent.Device.ProductId != TABMATE_PRODUCT_ID ||
+                hidEvent.Device.VendorId != TABMATE_VENDOR_ID) {
+                return;
+            }
             byte[] val = hidEvent.InputReport;
             string strVal = hidEvent.InputReportString();
+            ushort flags1 = (ushort)BitConverter.ToInt16(val, 1);
+            ushort flags2 = (ushort)BitConverter.ToInt16(val, 3);
+            ushort flags3 = (ushort)BitConverter.ToInt16(val, 5);
+            ushort flags4 = (ushort)BitConverter.ToInt16(val, 7);
             string updown = "??";
             if (hidEvent.IsButtonUp) {
                 updown = "UP";
@@ -133,11 +141,12 @@ namespace TabmateRelay {
                 updown = "DOWN";
             }
             string button = "Button";
-            if(hidEvent.Usages.Count > 0) {
+            if (hidEvent.Usages.Count > 0) {
                 button = "Button " + hidEvent.Usages[0].ToString();
             }
             //LogAppendTextAndNL($"{time} {hidEvent}");
-            LogAppendTextAndNL($"  {time.ToString("hh:mm:ss tt")} {strVal} {button} {updown}");
+            LogAppendTextAndNL($"  {time.ToString("hh:mm:ss tt")} {strVal}" +
+                $" flags {flags1:x2} {flags2:x2} {flags3:x2} {flags4:x2}  {button} {updown}");
         }
 
         public Input FindTabmate() {
@@ -212,11 +221,12 @@ namespace TabmateRelay {
         public string Info() {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Information" + NL);
+            Input tabmateDevice = FindTabmate();
             if (tabmateDevice != null) {
                 sb.AppendLine("Tabmate Info:");
                 sb.Append(HIDDeviceInfo(tabmateDevice));
             } else {
-                sb.AppendLine("Tabmate Info: No Tabmate device running");
+                sb.AppendLine("Tabmate Info: No Tabmate device found");
             }
             if (client != null) {
                 sb.AppendLine(NL + "Client Info:");
