@@ -23,9 +23,12 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             this.tableLayoutPanelTop = new System.Windows.Forms.TableLayoutPanel();
-            this.name = new System.Windows.Forms.Label();
+            this.labelButton = new System.Windows.Forms.Label();
             this.tableLayoutPanelKeydef = new System.Windows.Forms.TableLayoutPanel();
+            this.labelLabel = new System.Windows.Forms.Label();
+            this.textBoxLabel = new System.Windows.Forms.TextBox();
             this.labelKeyString = new System.Windows.Forms.Label();
             this.textBoxKeyString = new System.Windows.Forms.TextBox();
             this.flowLayoutPanelType = new System.Windows.Forms.FlowLayoutPanel();
@@ -33,14 +36,15 @@
             this.radioButtonHold = new System.Windows.Forms.RadioButton();
             this.radioButtonCommand = new System.Windows.Forms.RadioButton();
             this.radioButtonUnused = new System.Windows.Forms.RadioButton();
-            this.flowLayoutPanelButtons = new System.Windows.Forms.FlowLayoutPanel();
-            this.buttonCopy = new System.Windows.Forms.Button();
-            this.buttonPaste = new System.Windows.Forms.Button();
-            this.buttonReset = new System.Windows.Forms.Button();
+            this.buttonAction = new System.Windows.Forms.Button();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanelTop.SuspendLayout();
             this.tableLayoutPanelKeydef.SuspendLayout();
             this.flowLayoutPanelType.SuspendLayout();
-            this.flowLayoutPanelButtons.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanelTop
@@ -49,10 +53,9 @@
             this.tableLayoutPanelTop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanelTop.ColumnCount = 1;
             this.tableLayoutPanelTop.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanelTop.Controls.Add(this.name, 0, 0);
+            this.tableLayoutPanelTop.Controls.Add(this.labelButton, 0, 0);
             this.tableLayoutPanelTop.Controls.Add(this.tableLayoutPanelKeydef, 0, 1);
             this.tableLayoutPanelTop.Controls.Add(this.flowLayoutPanelType, 0, 2);
-            this.tableLayoutPanelTop.Controls.Add(this.flowLayoutPanelButtons, 0, 3);
             this.tableLayoutPanelTop.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanelTop.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanelTop.Name = "tableLayoutPanelTop";
@@ -62,21 +65,23 @@
             this.tableLayoutPanelTop.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelTop.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelTop.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanelTop.Size = new System.Drawing.Size(523, 233);
+            this.tableLayoutPanelTop.Size = new System.Drawing.Size(523, 226);
             this.tableLayoutPanelTop.TabIndex = 0;
             // 
-            // name
+            // labelButton
             // 
-            this.name.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.name.AutoSize = true;
-            this.name.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.1F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.name.Location = new System.Drawing.Point(210, 3);
-            this.name.Margin = new System.Windows.Forms.Padding(3);
-            this.name.Name = "name";
-            this.name.Size = new System.Drawing.Size(103, 32);
-            this.name.TabIndex = 0;
-            this.name.Text = "Button";
-            this.name.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.labelButton.AutoSize = true;
+            this.labelButton.BackColor = System.Drawing.SystemColors.InactiveCaption;
+            this.labelButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.1F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelButton.Location = new System.Drawing.Point(180, 3);
+            this.labelButton.Margin = new System.Windows.Forms.Padding(3);
+            this.labelButton.Name = "labelButton";
+            this.labelButton.Padding = new System.Windows.Forms.Padding(30, 0, 30, 0);
+            this.labelButton.Size = new System.Drawing.Size(163, 32);
+            this.labelButton.TabIndex = 0;
+            this.labelButton.Text = "Button";
+            this.labelButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // tableLayoutPanelKeydef
             // 
@@ -85,17 +90,41 @@
             this.tableLayoutPanelKeydef.ColumnCount = 2;
             this.tableLayoutPanelKeydef.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanelKeydef.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanelKeydef.Controls.Add(this.labelKeyString, 0, 0);
-            this.tableLayoutPanelKeydef.Controls.Add(this.textBoxKeyString, 1, 0);
+            this.tableLayoutPanelKeydef.Controls.Add(this.labelLabel, 0, 0);
+            this.tableLayoutPanelKeydef.Controls.Add(this.textBoxLabel, 1, 0);
+            this.tableLayoutPanelKeydef.Controls.Add(this.labelKeyString, 0, 1);
+            this.tableLayoutPanelKeydef.Controls.Add(this.textBoxKeyString, 1, 1);
             this.tableLayoutPanelKeydef.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanelKeydef.Location = new System.Drawing.Point(3, 40);
             this.tableLayoutPanelKeydef.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tableLayoutPanelKeydef.Name = "tableLayoutPanelKeydef";
-            this.tableLayoutPanelKeydef.RowCount = 1;
+            this.tableLayoutPanelKeydef.RowCount = 2;
             this.tableLayoutPanelKeydef.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelKeydef.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelKeydef.Size = new System.Drawing.Size(517, 42);
+            this.tableLayoutPanelKeydef.Size = new System.Drawing.Size(517, 84);
             this.tableLayoutPanelKeydef.TabIndex = 10;
+            // 
+            // labelLabel
+            // 
+            this.labelLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelLabel.AutoSize = true;
+            this.labelLabel.BackColor = System.Drawing.SystemColors.Control;
+            this.labelLabel.Location = new System.Drawing.Point(3, 0);
+            this.labelLabel.Name = "labelLabel";
+            this.labelLabel.Size = new System.Drawing.Size(85, 42);
+            this.labelLabel.TabIndex = 2;
+            this.labelLabel.Text = "Label";
+            this.labelLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // textBoxLabel
+            // 
+            this.textBoxLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxLabel.Location = new System.Drawing.Point(154, 2);
+            this.textBoxLabel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.textBoxLabel.Name = "textBoxLabel";
+            this.textBoxLabel.Size = new System.Drawing.Size(360, 38);
+            this.textBoxLabel.TabIndex = 3;
             // 
             // labelKeyString
             // 
@@ -103,7 +132,7 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.labelKeyString.AutoSize = true;
             this.labelKeyString.BackColor = System.Drawing.SystemColors.Control;
-            this.labelKeyString.Location = new System.Drawing.Point(3, 0);
+            this.labelKeyString.Location = new System.Drawing.Point(3, 42);
             this.labelKeyString.Name = "labelKeyString";
             this.labelKeyString.Size = new System.Drawing.Size(145, 42);
             this.labelKeyString.TabIndex = 0;
@@ -113,7 +142,7 @@
             // textBoxKeyString
             // 
             this.textBoxKeyString.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxKeyString.Location = new System.Drawing.Point(154, 2);
+            this.textBoxKeyString.Location = new System.Drawing.Point(154, 44);
             this.textBoxKeyString.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBoxKeyString.Name = "textBoxKeyString";
             this.textBoxKeyString.Size = new System.Drawing.Size(360, 38);
@@ -123,14 +152,16 @@
             // 
             this.flowLayoutPanelType.AutoSize = true;
             this.flowLayoutPanelType.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowLayoutPanelType.BackColor = System.Drawing.SystemColors.Control;
             this.flowLayoutPanelType.Controls.Add(this.radioButtonNormal);
             this.flowLayoutPanelType.Controls.Add(this.radioButtonHold);
             this.flowLayoutPanelType.Controls.Add(this.radioButtonCommand);
             this.flowLayoutPanelType.Controls.Add(this.radioButtonUnused);
-            this.flowLayoutPanelType.Location = new System.Drawing.Point(3, 87);
+            this.flowLayoutPanelType.Controls.Add(this.buttonAction);
+            this.flowLayoutPanelType.Location = new System.Drawing.Point(3, 129);
             this.flowLayoutPanelType.Name = "flowLayoutPanelType";
             this.flowLayoutPanelType.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.flowLayoutPanelType.Size = new System.Drawing.Size(511, 84);
+            this.flowLayoutPanelType.Size = new System.Drawing.Size(511, 88);
             this.flowLayoutPanelType.TabIndex = 8;
             // 
             // radioButtonNormal
@@ -180,62 +211,48 @@
             this.radioButtonUnused.Text = "Unused";
             this.radioButtonUnused.UseVisualStyleBackColor = true;
             // 
-            // flowLayoutPanelButtons
+            // buttonAction
             // 
-            this.flowLayoutPanelButtons.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.flowLayoutPanelButtons.AutoSize = true;
-            this.flowLayoutPanelButtons.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanelButtons.BackColor = System.Drawing.SystemColors.Control;
-            this.flowLayoutPanelButtons.Controls.Add(this.buttonReset);
-            this.flowLayoutPanelButtons.Controls.Add(this.buttonCopy);
-            this.flowLayoutPanelButtons.Controls.Add(this.buttonPaste);
-            this.flowLayoutPanelButtons.Location = new System.Drawing.Point(110, 177);
-            this.flowLayoutPanelButtons.Name = "flowLayoutPanelButtons";
-            this.flowLayoutPanelButtons.Size = new System.Drawing.Size(303, 53);
-            this.flowLayoutPanelButtons.TabIndex = 9;
-            this.flowLayoutPanelButtons.WrapContents = false;
+            this.buttonAction.AutoSize = true;
+            this.buttonAction.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.buttonAction.Location = new System.Drawing.Point(178, 44);
+            this.buttonAction.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.buttonAction.Name = "buttonAction";
+            this.buttonAction.Size = new System.Drawing.Size(104, 42);
+            this.buttonAction.TabIndex = 4;
+            this.buttonAction.Text = "Action";
+            this.buttonAction.UseVisualStyleBackColor = true;
+            this.buttonAction.Click += new System.EventHandler(this.OnActionClick);
             // 
-            // buttonCopy
+            // contextMenuStrip1
             // 
-            this.buttonCopy.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.buttonCopy.AutoSize = true;
-            this.buttonCopy.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.buttonCopy.Location = new System.Drawing.Point(107, 2);
-            this.buttonCopy.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.buttonCopy.Name = "buttonCopy";
-            this.buttonCopy.Size = new System.Drawing.Size(90, 42);
-            this.buttonCopy.TabIndex = 0;
-            this.buttonCopy.Text = "Copy";
-            this.buttonCopy.UseVisualStyleBackColor = true;
-            this.buttonCopy.Click += new System.EventHandler(this.OnCopyClick);
+            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(40, 40);
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.resetToolStripMenuItem,
+            this.copyToolStripMenuItem,
+            this.pasteToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(169, 148);
             // 
-            // buttonPaste
+            // resetToolStripMenuItem
             // 
-            this.buttonPaste.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.buttonPaste.AutoSize = true;
-            this.buttonPaste.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.buttonPaste.Location = new System.Drawing.Point(203, 2);
-            this.buttonPaste.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.buttonPaste.Name = "buttonPaste";
-            this.buttonPaste.Size = new System.Drawing.Size(97, 42);
-            this.buttonPaste.TabIndex = 1;
-            this.buttonPaste.Text = "Paste";
-            this.buttonPaste.UseVisualStyleBackColor = true;
-            this.buttonPaste.Click += new System.EventHandler(this.OnPasteClick);
+            this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
+            this.resetToolStripMenuItem.Size = new System.Drawing.Size(168, 48);
+            this.resetToolStripMenuItem.Text = "Reset";
             // 
-            // buttonReset
+            // copyToolStripMenuItem
             // 
-            this.buttonReset.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.buttonReset.AutoSize = true;
-            this.buttonReset.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.buttonReset.Location = new System.Drawing.Point(3, 2);
-            this.buttonReset.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.buttonReset.Name = "buttonReset";
-            this.buttonReset.Size = new System.Drawing.Size(98, 42);
-            this.buttonReset.TabIndex = 2;
-            this.buttonReset.Text = "Reset";
-            this.buttonReset.UseVisualStyleBackColor = true;
-            this.buttonReset.Click += new System.EventHandler(this.OnResetClick);
+            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(168, 48);
+            this.copyToolStripMenuItem.Text = "Copy";
+            this.copyToolStripMenuItem.Click += new System.EventHandler(this.OnCopyClick);
+            // 
+            // pasteToolStripMenuItem
+            // 
+            this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
+            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(168, 48);
+            this.pasteToolStripMenuItem.Text = "Paste";
+            this.pasteToolStripMenuItem.Click += new System.EventHandler(this.OnPasteClick);
             // 
             // KeyDefControl
             // 
@@ -244,15 +261,14 @@
             this.Controls.Add(this.tableLayoutPanelTop);
             this.Margin = new System.Windows.Forms.Padding(5);
             this.Name = "KeyDefControl";
-            this.Size = new System.Drawing.Size(523, 233);
+            this.Size = new System.Drawing.Size(523, 226);
             this.tableLayoutPanelTop.ResumeLayout(false);
             this.tableLayoutPanelTop.PerformLayout();
             this.tableLayoutPanelKeydef.ResumeLayout(false);
             this.tableLayoutPanelKeydef.PerformLayout();
             this.flowLayoutPanelType.ResumeLayout(false);
             this.flowLayoutPanelType.PerformLayout();
-            this.flowLayoutPanelButtons.ResumeLayout(false);
-            this.flowLayoutPanelButtons.PerformLayout();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -261,7 +277,7 @@
         #endregion
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelTop;
-        private System.Windows.Forms.Label name;
+        private System.Windows.Forms.Label labelButton;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelKeydef;
         private System.Windows.Forms.Label labelKeyString;
         private System.Windows.Forms.TextBox textBoxKeyString;
@@ -270,9 +286,12 @@
         private System.Windows.Forms.RadioButton radioButtonHold;
         private System.Windows.Forms.RadioButton radioButtonCommand;
         private System.Windows.Forms.RadioButton radioButtonUnused;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelButtons;
-        private System.Windows.Forms.Button buttonCopy;
-        private System.Windows.Forms.Button buttonPaste;
-        private System.Windows.Forms.Button buttonReset;
+        private System.Windows.Forms.Label labelLabel;
+        private System.Windows.Forms.TextBox textBoxLabel;
+        private System.Windows.Forms.Button buttonAction;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem resetToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
     }
 }

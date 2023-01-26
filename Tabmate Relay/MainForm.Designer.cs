@@ -39,6 +39,9 @@ namespace TabmateRelay {
             this.connectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.configurationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
@@ -53,7 +56,7 @@ namespace TabmateRelay {
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1329, 49);
+            this.menuStrip1.Size = new System.Drawing.Size(1329, 52);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -62,7 +65,7 @@ namespace TabmateRelay {
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(87, 45);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(87, 48);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // exitToolStripMenuItem
@@ -85,7 +88,7 @@ namespace TabmateRelay {
             this.showLogToolStripMenuItem,
             this.configurationToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(111, 45);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(111, 48);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
             // startTabmateToolStripMenuItem
@@ -146,17 +149,42 @@ namespace TabmateRelay {
             // 
             // configurationToolStripMenuItem
             // 
+            this.configurationToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editToolStripMenuItem,
+            this.openToolStripMenuItem,
+            this.saveAsToolStripMenuItem});
             this.configurationToolStripMenuItem.Name = "configurationToolStripMenuItem";
             this.configurationToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
             this.configurationToolStripMenuItem.Text = "Configuration...";
-            this.configurationToolStripMenuItem.Click += new System.EventHandler(this.OnToolsConfigurationClick);
+            this.configurationToolStripMenuItem.Click += new System.EventHandler(this.OnToolsConfigurationEditClick);
+            // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
+            this.editToolStripMenuItem.Text = "Edit...";
+            this.editToolStripMenuItem.Click += new System.EventHandler(this.OnToolsConfigurationEditClick);
+            // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
+            this.openToolStripMenuItem.Text = "Open...";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.OnToolsConfigurationOpenClick);
+            // 
+            // saveAsToolStripMenuItem
+            // 
+            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
+            this.saveAsToolStripMenuItem.Text = "Save As...";
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.OnToolsConfigurationSaveAsClick);
             // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(104, 45);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(104, 48);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // aboutToolStripMenuItem
@@ -202,5 +230,8 @@ namespace TabmateRelay {
         private ToolStripMenuItem findTabmateToolStripMenuItem;
         private ToolStripMenuItem startTabmateToolStripMenuItem;
         private ToolStripMenuItem configurationToolStripMenuItem;
+        private ToolStripMenuItem editToolStripMenuItem;
+        private ToolStripMenuItem openToolStripMenuItem;
+        private ToolStripMenuItem saveAsToolStripMenuItem;
     }
 }

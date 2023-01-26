@@ -1,6 +1,9 @@
-﻿using System;
+﻿using KEUtils.Utils;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -50,6 +53,36 @@ namespace TabmateRelay {
                 }
             }
         }
+
+        /// <summary>
+        /// Reads a configuration from the specified file name.
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public static Configuration readConfig(string fileName) {
+            try {
+                Configuration newConfig = JsonConvert.
+                    DeserializeObject<Configuration>
+                    (System.IO.File.ReadAllText(fileName));
+                return newConfig;
+            } catch (Exception ex) {
+                Utils.excMsg("Error reading configuration from "
+                     + fileName, ex);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Writes the specified configuration to the specified file.
+        /// </summary>
+        /// <param name="config"></param>
+        /// <param name="fileName"></param>
+        public static void writeConfig(Configuration config, string fileName) {
+            string json = JsonConvert.SerializeObject(config, Formatting.Indented);
+            System.IO.File.WriteAllText(fileName, json);
+        }
+
+
 
         private void OnFormClosing(object sender, FormClosingEventArgs e) {
             // Just hide rather than close if the user did it

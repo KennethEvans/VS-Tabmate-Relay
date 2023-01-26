@@ -1,3 +1,4 @@
+
 using InTheHand.Net.Sockets;
 using KEUtils.About;
 using KEUtils.ScrolledText;
@@ -7,15 +8,19 @@ using SharpLib.Hid.Device;
 using SharpLib.Win32;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TabmateRelay.Properties;
+using static TabmateRelay.KeyDef;
 
 namespace TabmateRelay {
     public partial class MainForm : Form {
@@ -63,8 +68,9 @@ namespace TabmateRelay {
             InitializeComponent();
 
             // Get configuration
-            // Use this one for now
             GetConfigurationFromSettings();
+            //// Set to default configuration
+            //Configuration = DefaultConfiguration();
 
             usagePage = Settings.Default.UsagePage;
             usageCollection = Settings.Default.UsageCollection;
@@ -169,7 +175,7 @@ namespace TabmateRelay {
             bool wasPressed;
             KeyDef keyDef;
             for (int j = 0; j < 4; j++) {
-                for (int i = 0; i < 14; i++) {
+                for (int i = 0; i < 15; i++) {
                     button = 15 * j + i;
                     pos = (ushort)(1 << i);
                     keyDef = Configuration[button];
@@ -214,11 +220,14 @@ namespace TabmateRelay {
         private KeyDef[] DefaultConfiguration() {
             KeyDef[] keyDefs = new KeyDef[60];
             int button;
+            int charA = (int)'A';
+            string label;
             for (int j = 0; j < 4; j++) {
                 for (int i = 0; i < 15; i++) {
                     button = 15 * j + i;
+                    label = $"{(char)(charA + j)}{i}";
                     keyDefs[button] = new KeyDef(ButtonNames[i],
-                        ButtonNames[i] + " ", KeyDef.KeyType.NORMAL);
+                        label, KeyDef.KeyType.NORMAL, $"Test {label}");
                 }
             }
             return keyDefs;
@@ -417,6 +426,76 @@ namespace TabmateRelay {
             }));
         }
 
+        public void OpenConfiguration(string fileName) {
+            string[] tokens;
+            int i, j, button;
+            KeyType type;
+            bool first = true;
+            int nLines = 0;
+            try {
+                foreach (string line in File.ReadAllLines(fileName)) {
+                    nLines++;
+                    if(first) {
+                        // First line is the heading
+                        first = false;
+                        continue;
+                    }
+                    if(nLines > 61) {
+                        Utils.errMsg($"Too many lines in {fileName}");
+                        break;
+
+                    }
+                    tokens = line.Split('\t');
+                    button = Convert.ToInt32(tokens[0]);
+                    j = Convert.ToInt32(tokens[1]);
+                    i = Convert.ToInt32(tokens[2]);
+                    if (tokens[6].Equals("NORMAL")) type = KeyType.NORMAL;
+                    else if (tokens[6].Equals("HOLD")) type = KeyType.HOLD;
+                    else if (tokens[6].Equals("COMMAND")) type = KeyType.COMMAND;
+                    else if (tokens[6].Equals("UNUSED")) type = KeyType.UNUSED;
+                    else type = KeyType.NORMAL;
+                    Configuration[button] = new KeyDef(tokens[3], tokens[5],
+                        type, tokens[4]);
+                }
+                if (nLines < 61) {
+                    Utils.errMsg($"Not enough lines in {fileName} for 60 buttons");
+                }
+                Utils.infoMsg($"Read configuration from {fileName}");
+            } catch (Exception ex) {
+                Utils.excMsg("Error reading configuration from "
+                     + fileName, ex);
+            }
+        }
+
+        public void SaveConfiguration(string fileName) {
+            // Using TAB as separator
+            try {
+                KeyDef keyDef;
+                int button;
+                using (StreamWriter outputFile = File.CreateText(fileName)) {
+                    outputFile.WriteLine("Button\tPage\tNumber\tName\tLabel\tKeyString\tType");
+                    for (int j = 0; j < 4; j++) {
+                        for (int i = 0; i < 15; i++) {
+                            button = 15 * j + i;
+                            keyDef = Configuration[button];
+                            outputFile.WriteLine($"{button}\t" +
+                                $"{j}\t" +
+                                $"{i}\t" +
+                                $"{ButtonNames[i]}\t" +
+                                $"{keyDef.Label}\t" +
+                                $"{keyDef.KeyString}\t" +
+                                $"{(KeyType)keyDef.Type}");
+                        }
+                    }
+                    outputFile.Close();
+                    Utils.infoMsg($"Saved configuration to {fileName}");
+                }
+            } catch (Exception ex) {
+                Utils.excMsg("Error writing" + fileName, ex);
+                return;
+            }
+        }
+
         protected override void WndProc(ref Message message) {
             switch (message.Msg) {
                 case Const.WM_INPUT:
@@ -533,7 +612,7 @@ namespace TabmateRelay {
             ShowLogDialogInFront();
         }
 
-        private void OnToolsConfigurationClick(object sender, EventArgs e) {
+        private void OnToolsConfigurationEditClick(object sender, EventArgs e) {
             Cursor.Current = Cursors.WaitCursor;
             ConfigurationDialog dialog = new ConfigurationDialog(Configuration);
             DialogResult res = dialog.ShowDialog();
@@ -542,6 +621,26 @@ namespace TabmateRelay {
                 Configuration = dialog.Configuration;
                 SaveConfigurationToSettings();
             }
+        }
+
+        private void OnToolsConfigurationOpenClick(object sender, EventArgs e) {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.Filter = "CSV Files|*.csv";
+            dlg.Title = "Select a Configuration File";
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
+                OpenConfiguration(dlg.FileName);
+            }
+        }
+
+        private void OnToolsConfigurationSaveAsClick(object sender, EventArgs e) {
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.Filter = "CSV Files|*.csv";
+            dlg.Title = "Select a Configuration File";
+            dlg.CheckPathExists = true;
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
+                SaveConfiguration(dlg.FileName);
+            }
+
         }
     }
 }

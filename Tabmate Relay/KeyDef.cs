@@ -1,12 +1,9 @@
 ﻿using Newtonsoft.Json;
-using System.Windows.Forms;
 using System;
 using System.Diagnostics;
-using System.Configuration;
-using System.Drawing;
-using Windows.Win32.Foundation;
-using WindowsInput.Native;
+using System.Windows.Forms;
 using WindowsInput;
+using WindowsInput.Native;
 
 namespace TabmateRelay {
 
@@ -15,16 +12,18 @@ namespace TabmateRelay {
 
         public enum KeyType { NORMAL, HOLD, COMMAND, UNUSED };
 
-        public string Name { get; set; }
+        public string Button { get; set; }
         public string KeyString { get; set; }
+        public string Label { get; set; }
         public KeyType Type { get; set; } = KeyType.NORMAL;
         public bool Pressed { get; set; }
 
         [JsonConstructor]
-        public KeyDef(string name="", string keyString="", 
-            KeyType type=KeyType.UNUSED) {
-            Name = name;
+        public KeyDef(string button = "", string keyString = "",
+            KeyType type = KeyType.UNUSED, string label = "") {
+            Button = button;
             KeyString = keyString;
+            Label = label;
             Type = type;
         }
 
@@ -33,16 +32,26 @@ namespace TabmateRelay {
         /// </summary>
         /// <param name="keyDef"></param>
         public KeyDef(KeyDef keyDef) {
-            this.Name = keyDef.Name;
-            this.KeyString = keyDef.KeyString;
-            this.Type = keyDef.Type;
+            Button = keyDef.Button;
+            KeyString = keyDef.KeyString;
+            Label = keyDef.Label;
+            Type = keyDef.Type;
+            Pressed = keyDef.Pressed;
         }
 
+        /// <summary>
+        /// 
+        /// Check for equality.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns>If equal.</returns>
         public bool Equals(KeyDef other) {
             if (other == null) return false;
-            if (this.Name.Equals(other.Name) &&
-                this.KeyString.Equals(other.KeyString) &&
-                this.Type == other.Type) {
+            if (Button.Equals(other.Button) &&
+                KeyString.Equals(other.KeyString) &&
+                Label.Equals(other.Label) &&
+                Type == other.Type &&
+                Pressed == other.Pressed) {
                 return true;
             }
             return false;
@@ -69,7 +78,7 @@ namespace TabmateRelay {
         }
 
         public void HandleHoldKeyWasPressed() {
-            if(Type == KeyType.HOLD && Pressed) {
+            if (Type == KeyType.HOLD && Pressed) {
                 Pressed = true;
                 // This wil send KeyUp and marks it as unpressed
                 HandleKey();
@@ -91,7 +100,7 @@ namespace TabmateRelay {
                     try {
                         keyCode = GetKeyCode();
                     } catch (System.ArgumentException) {
-                        throw new KeyDefException("Unable to get key code for " + Name);
+                        throw new KeyDefException("Unable to get key code for " + Button);
                     }
                     InputSimulator sim = new InputSimulator();
                     try {
@@ -112,7 +121,7 @@ namespace TabmateRelay {
                     var tokens = KeyString.Split(',');
                     if (tokens.Length == 0) {
                         throw new KeyDefException("Unable to process COMMAND |"
-                            + KeyString + "| for " + Name);
+                            + KeyString + "| for " + Button);
 
                     } else {
                         // Send the KeyString as a command

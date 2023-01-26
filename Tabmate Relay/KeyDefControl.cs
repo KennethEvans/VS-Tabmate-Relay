@@ -1,15 +1,7 @@
-﻿using KEUtils.ScrolledHTML;
-using KEUtils.Utils;
+﻿using KEUtils.Utils;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Configuration;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TabmateRelay {
@@ -26,7 +18,8 @@ namespace TabmateRelay {
         }
 
         public void SetValues() {
-            name.Text = KeyDef.Name;
+            labelButton.Text = KeyDef.Button;
+            textBoxLabel.Text = KeyDef.Label;
             textBoxKeyString.Text = KeyDef.KeyString;
             switch (KeyDef.Type) {
                 case KeyDef.KeyType.NORMAL:
@@ -46,7 +39,8 @@ namespace TabmateRelay {
 
         public KeyDef GetValues() {
             KeyDef newKeyDef= new KeyDef();
-            newKeyDef.Name = name.Text;
+            newKeyDef.Button = labelButton.Text;
+            newKeyDef.Label = textBoxLabel.Text;
             newKeyDef.KeyString = textBoxKeyString.Text;
             if (radioButtonNormal.Checked) newKeyDef.Type = KeyDef.KeyType.NORMAL;
             else if (radioButtonHold.Checked) newKeyDef.Type = KeyDef.KeyType.HOLD;
@@ -86,7 +80,7 @@ namespace TabmateRelay {
             try {
                 newKeyDef = JsonConvert.DeserializeObject<KeyDef>(json);
                 // Dont't paste the name of the key
-                newKeyDef.Name = KeyDef.Name;
+                newKeyDef.Button = KeyDef.Button;
             } catch (Exception ex) {
                 Utils.excMsg(
                     "Error converting clipboard contents to a "
@@ -96,6 +90,9 @@ namespace TabmateRelay {
             KeyDef = newKeyDef;
             SetValues();
         }
-    }
 
+        private void OnActionClick(object sender, EventArgs e) {
+            contextMenuStrip1.Show(buttonAction, new Point(buttonAction.Width, 0));
+        }
+    }
 }
