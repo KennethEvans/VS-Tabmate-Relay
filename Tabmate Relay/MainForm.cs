@@ -2,6 +2,7 @@ using InTheHand.Net.Sockets;
 using KEUtils.About;
 using KEUtils.ScrolledText;
 using KEUtils.Utils;
+using Newtonsoft.Json;
 using SharpLib.Hid.Device;
 using SharpLib.Win32;
 using System;
@@ -39,8 +40,31 @@ namespace TabmateRelay {
         const int MAX_EVENTS_PER_PERIOD = 10;
         const int PERIOD_DURATION_MS = 500;
 
+        public static string[] ButtonNames { get; } = {
+            "Button +",
+            "Button -",
+            "Button A",
+            "Button B",
+            "Button C",
+            "Button D",
+            "Wheel Up",
+            "Wheel Down",
+            "Wheel Push",
+            "Trigger",
+            "Pad Up",
+            "Pad Down",
+            "Pad Right",
+            "Pad Left",
+            "Pad Middle",
+        };
+        public KeyDef[] Configuration { get; set; }
+
         public MainForm() {
             InitializeComponent();
+
+            // Get configuration
+            // Use this one for now
+            GetConfigurationFromSettings();
 
             usagePage = Settings.Default.UsagePage;
             usageCollection = Settings.Default.UsageCollection;
@@ -122,31 +146,82 @@ namespace TabmateRelay {
         }
 
         public void ProcessEvent(SharpLib.Hid.Event hidEvent) {
-            DateTime time = hidEvent.Time;
-            // Be sure it coms for the Tabmate
+            // Be sure it comes from Tabmate
             if (hidEvent.Device.ProductId != TABMATE_PRODUCT_ID ||
                 hidEvent.Device.VendorId != TABMATE_VENDOR_ID) {
                 return;
             }
+
+            // Write to log
             byte[] val = hidEvent.InputReport;
+            ushort[] flags = new ushort[4];
+            flags[0] = (ushort)BitConverter.ToInt16(val, 1);
+            flags[1] = (ushort)BitConverter.ToInt16(val, 3);
+            flags[2] = (ushort)BitConverter.ToInt16(val, 5);
+            flags[3] = (ushort)BitConverter.ToInt16(val, 7);
+
+            // Write to log
+            LogEvent(hidEvent, flags);
+
+            // Process input
+            ushort pos;
+            int button;
+            bool wasPressed;
+            KeyDef keyDef;
+            for (int j = 0; j < 4; j++) {
+                for (int i = 0; i < 14; i++) {
+                    button = 15 * j + i;
+                    pos = (ushort)(1 << i);
+                    keyDef = Configuration[button];
+                    wasPressed = keyDef.Pressed;
+                    try {
+                        if ((pos & flags[j]) == 1) {
+                            // Button is down
+                            keyDef.HandleKey();
+                        } else if (keyDef.Type == KeyDef.KeyType.HOLD && wasPressed) {
+                            // Button was down but is not now
+                            keyDef.HandleHoldKeyWasPressed();
+                        } else continue;
+                    } catch (Exception ex) {
+                        LogAppendTextAndNL($"{Timestamp()} {ex.ToString()}");
+                    }
+                }
+            }
+        }
+
+        public void LogEvent(SharpLib.Hid.Event hidEvent, ushort[] flags) {
+            DateTime time = hidEvent.Time;
             string strVal = hidEvent.InputReportString();
-            ushort flags1 = (ushort)BitConverter.ToInt16(val, 1);
-            ushort flags2 = (ushort)BitConverter.ToInt16(val, 3);
-            ushort flags3 = (ushort)BitConverter.ToInt16(val, 5);
-            ushort flags4 = (ushort)BitConverter.ToInt16(val, 7);
             string updown = "??";
             if (hidEvent.IsButtonUp) {
                 updown = "UP";
             } else if (hidEvent.IsButtonDown) {
                 updown = "DOWN";
             }
-            string button = "Button";
+            string buttonStr = "Button";
             if (hidEvent.Usages.Count > 0) {
-                button = "Button " + hidEvent.Usages[0].ToString();
+                buttonStr = "Button " + hidEvent.Usages[0].ToString();
             }
-            //LogAppendTextAndNL($"{time} {hidEvent}");
+
             LogAppendTextAndNL($"  {time.ToString("hh:mm:ss tt")} {strVal}" +
-                $" flags {flags1:x2} {flags2:x2} {flags3:x2} {flags4:x2}  {button} {updown}");
+                $" flags {flags[0]:x2} {flags[1]:x2} {flags[2]:x2} {flags[3]:x2}  {buttonStr} {updown}");
+
+            // DEBUG
+            string fgTitle = Tools.getForegroundWindowTitle();
+            LogAppendTextAndNL($"Foreground window: {fgTitle}");
+        }
+
+        private KeyDef[] DefaultConfiguration() {
+            KeyDef[] keyDefs = new KeyDef[60];
+            int button;
+            for (int j = 0; j < 4; j++) {
+                for (int i = 0; i < 15; i++) {
+                    button = 15 * j + i;
+                    keyDefs[button] = new KeyDef(ButtonNames[i],
+                        ButtonNames[i] + " ", KeyDef.KeyType.NORMAL);
+                }
+            }
+            return keyDefs;
         }
 
         public Input FindTabmate() {
@@ -272,6 +347,49 @@ namespace TabmateRelay {
             return now.ToString();
         }
 
+        public void SaveConfigurationToSettings() {
+            try {
+                string json =
+                    JsonConvert.SerializeObject(Configuration, Formatting.Indented);
+                Settings.Default.Configuration = json;
+                Settings.Default.Save();
+                //int end1 = json.Length;
+                //if (end1 > 100) end1 = 100;
+                //int end2 = Settings.Default.Configuration.Length;
+                //if (end2 > 100) end2 = 100;
+                //Utils.infoMsg($"SaveConfigurationToSettings:{NL}" +
+                //    $"{Configuration[0].KeyString}{NL}" +
+                //    $"Settings: {Settings.Default.Configuration.Substring(0, end2)}...{NL}" +
+                //    $"json: {json.Substring(0, end1)}...");
+            } catch (System.Exception ex) {
+                Utils.excMsg("Error saving Configuration", ex);
+            }
+        }
+
+        public void GetConfigurationFromSettings() {
+            string json = Settings.Default.Configuration;
+            if (String.IsNullOrEmpty(json) || json.Equals("null")) {
+                Configuration = DefaultConfiguration();
+            } else {
+                try {
+                    Configuration = JsonConvert.DeserializeObject<KeyDef[]>(json);
+                    return;
+                } catch (Exception ex) {
+                    Utils.excMsg(
+                        "Error restoring Configuration from settings, using default", ex);
+                    Configuration = DefaultConfiguration();
+                }
+            }
+            //int end1 = json.Length;
+            //if (end1 > 100) end1 = 100;
+            //int end2 = Settings.Default.Configuration.Length;
+            //if (end2 > 100) end2 = 100;
+            //Utils.infoMsg($"GetConfigurationFromSettings:{NL}" +
+            //    $"{Configuration[0].KeyString}{NL}" +
+            //    $"Settings: {Settings.Default.Configuration.Substring(0, end1)}...{NL}" +
+            //    $"json: {json.Substring(0, end2)}...");
+        }
+
         public string FormattedMacAddress(InTheHand.Net.BluetoothAddress address) {
             string addr = address.ToString();
             while (addr.Length < 12) {
@@ -335,7 +453,7 @@ namespace TabmateRelay {
             Assembly assembly = Assembly.GetExecutingAssembly();
             Image image = null;
             try {
-                image = Image.FromFile(@".\Help\tabmate_info_en.png");
+                image = Image.FromFile(@".\Help\Tabmate Relay.png");
             } catch (Exception ex) {
                 Utils.excMsg("Failed to get AboutBox image", ex);
             }
@@ -413,6 +531,17 @@ namespace TabmateRelay {
         private void OnToolsStartTabmateClick(object sender, EventArgs e) {
             StartTabmate();
             ShowLogDialogInFront();
+        }
+
+        private void OnToolsConfigurationClick(object sender, EventArgs e) {
+            Cursor.Current = Cursors.WaitCursor;
+            ConfigurationDialog dialog = new ConfigurationDialog(Configuration);
+            DialogResult res = dialog.ShowDialog();
+            Cursor.Current = Cursors.Default;
+            if (res == DialogResult.OK) {
+                Configuration = dialog.Configuration;
+                SaveConfigurationToSettings();
+            }
         }
     }
 }

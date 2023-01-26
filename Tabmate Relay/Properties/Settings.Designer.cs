@@ -46,5 +46,17 @@ namespace TabmateRelay.Properties {
                 this["UsageCollection"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("null")]
+        public string Configuration {
+            get {
+                return ((string)(this["Configuration"]));
+            }
+            set {
+                this["Configuration"] = value;
+            }
+        }
     }
 }
