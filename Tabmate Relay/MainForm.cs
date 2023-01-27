@@ -8,19 +8,15 @@ using SharpLib.Hid.Device;
 using SharpLib.Win32;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TabmateRelay.Properties;
-using static TabmateRelay.KeyDef;
 
 namespace TabmateRelay {
     public partial class MainForm : Form {
@@ -45,23 +41,6 @@ namespace TabmateRelay {
         const int MAX_EVENTS_PER_PERIOD = 10;
         const int PERIOD_DURATION_MS = 500;
 
-        public static string[] ButtonNames { get; } = {
-            "Button +",
-            "Button -",
-            "Button A",
-            "Button B",
-            "Button C",
-            "Button D",
-            "Wheel Up",
-            "Wheel Down",
-            "Wheel Push",
-            "Trigger",
-            "Pad Up",
-            "Pad Down",
-            "Pad Right",
-            "Pad Left",
-            "Pad Middle",
-        };
         public KeyDef[] Configuration { get; set; }
 
         public MainForm() {
@@ -160,42 +139,39 @@ namespace TabmateRelay {
 
             // Write to log
             byte[] val = hidEvent.InputReport;
-            ushort[] flags = new ushort[4];
-            flags[0] = (ushort)BitConverter.ToInt16(val, 1);
-            flags[1] = (ushort)BitConverter.ToInt16(val, 3);
-            flags[2] = (ushort)BitConverter.ToInt16(val, 5);
-            flags[3] = (ushort)BitConverter.ToInt16(val, 7);
+            ulong flag = (ulong)BitConverter.ToInt64(val, 1);
 
             // Write to log
-            LogEvent(hidEvent, flags);
+            LogEvent(hidEvent, flag);
 
             // Process input
-            ushort pos;
+            ulong pos;
             int button;
             bool wasPressed;
             KeyDef keyDef;
-            for (int j = 0; j < 4; j++) {
-                for (int i = 0; i < 15; i++) {
-                    button = 15 * j + i;
-                    pos = (ushort)(1 << i);
-                    keyDef = Configuration[button];
-                    wasPressed = keyDef.Pressed;
-                    try {
-                        if ((pos & flags[j]) == 1) {
-                            // Button is down
+            for (int i = 0; i < 60; i++) {
+                button = i;
+                keyDef = Configuration[button];
+                wasPressed = keyDef.Pressed;
+                pos = (ulong)1 << i;
+                ulong bit = pos & flag;
+                try {
+                    if (bit == pos) {
+                        // Button is down
+                        if (!wasPressed) {
                             keyDef.HandleKey();
-                        } else if (keyDef.Type == KeyDef.KeyType.HOLD && wasPressed) {
-                            // Button was down but is not now
-                            keyDef.HandleHoldKeyWasPressed();
-                        } else continue;
-                    } catch (Exception ex) {
-                        LogAppendTextAndNL($"{Timestamp()} {ex.ToString()}");
+                        }
+                    } else if (wasPressed && keyDef.Type == KeyDef.KeyType.HOLD) {
+                        // Button was down but is not now
+                        keyDef.HandleHoldKeyWasPressed();
                     }
+                } catch (Exception ex) {
+                    LogAppendTextAndNL($"{Timestamp()} {ex.ToString()}");
                 }
             }
         }
 
-        public void LogEvent(SharpLib.Hid.Event hidEvent, ushort[] flags) {
+        public void LogEvent(SharpLib.Hid.Event hidEvent, ulong flag) {
             DateTime time = hidEvent.Time;
             string strVal = hidEvent.InputReportString();
             string updown = "??";
@@ -208,29 +184,12 @@ namespace TabmateRelay {
             if (hidEvent.Usages.Count > 0) {
                 buttonStr = "Button " + hidEvent.Usages[0].ToString();
             }
-
             LogAppendTextAndNL($"  {time.ToString("hh:mm:ss tt")} {strVal}" +
-                $" flags {flags[0]:x2} {flags[1]:x2} {flags[2]:x2} {flags[3]:x2}  {buttonStr} {updown}");
+            $" flag {flag:x016} {buttonStr} {updown}");
 
-            // DEBUG
-            string fgTitle = Tools.getForegroundWindowTitle();
-            LogAppendTextAndNL($"Foreground window: {fgTitle}");
-        }
-
-        private KeyDef[] DefaultConfiguration() {
-            KeyDef[] keyDefs = new KeyDef[60];
-            int button;
-            int charA = (int)'A';
-            string label;
-            for (int j = 0; j < 4; j++) {
-                for (int i = 0; i < 15; i++) {
-                    button = 15 * j + i;
-                    label = $"{(char)(charA + j)}{i}";
-                    keyDefs[button] = new KeyDef(ButtonNames[i],
-                        label, KeyDef.KeyType.NORMAL, $"Test {label}");
-                }
-            }
-            return keyDefs;
+            //// DEBUG
+            //string fgTitle = Tools.getForegroundWindowTitle();
+            //LogAppendTextAndNL($"Foreground window: {fgTitle}");
         }
 
         public Input FindTabmate() {
@@ -362,14 +321,6 @@ namespace TabmateRelay {
                     JsonConvert.SerializeObject(Configuration, Formatting.Indented);
                 Settings.Default.Configuration = json;
                 Settings.Default.Save();
-                //int end1 = json.Length;
-                //if (end1 > 100) end1 = 100;
-                //int end2 = Settings.Default.Configuration.Length;
-                //if (end2 > 100) end2 = 100;
-                //Utils.infoMsg($"SaveConfigurationToSettings:{NL}" +
-                //    $"{Configuration[0].KeyString}{NL}" +
-                //    $"Settings: {Settings.Default.Configuration.Substring(0, end2)}...{NL}" +
-                //    $"json: {json.Substring(0, end1)}...");
             } catch (System.Exception ex) {
                 Utils.excMsg("Error saving Configuration", ex);
             }
@@ -378,7 +329,7 @@ namespace TabmateRelay {
         public void GetConfigurationFromSettings() {
             string json = Settings.Default.Configuration;
             if (String.IsNullOrEmpty(json) || json.Equals("null")) {
-                Configuration = DefaultConfiguration();
+                Configuration = ConfigurationDialog.DefaultConfiguration();
             } else {
                 try {
                     Configuration = JsonConvert.DeserializeObject<KeyDef[]>(json);
@@ -386,17 +337,9 @@ namespace TabmateRelay {
                 } catch (Exception ex) {
                     Utils.excMsg(
                         "Error restoring Configuration from settings, using default", ex);
-                    Configuration = DefaultConfiguration();
+                    Configuration = ConfigurationDialog.DefaultConfiguration();
                 }
             }
-            //int end1 = json.Length;
-            //if (end1 > 100) end1 = 100;
-            //int end2 = Settings.Default.Configuration.Length;
-            //if (end2 > 100) end2 = 100;
-            //Utils.infoMsg($"GetConfigurationFromSettings:{NL}" +
-            //    $"{Configuration[0].KeyString}{NL}" +
-            //    $"Settings: {Settings.Default.Configuration.Substring(0, end1)}...{NL}" +
-            //    $"json: {json.Substring(0, end2)}...");
         }
 
         public string FormattedMacAddress(InTheHand.Net.BluetoothAddress address) {
@@ -424,76 +367,6 @@ namespace TabmateRelay {
                     Utils.infoMsg("No log has been created yet");
                 }
             }));
-        }
-
-        public void OpenConfiguration(string fileName) {
-            string[] tokens;
-            int i, j, button;
-            KeyType type;
-            bool first = true;
-            int nLines = 0;
-            try {
-                foreach (string line in File.ReadAllLines(fileName)) {
-                    nLines++;
-                    if(first) {
-                        // First line is the heading
-                        first = false;
-                        continue;
-                    }
-                    if(nLines > 61) {
-                        Utils.errMsg($"Too many lines in {fileName}");
-                        break;
-
-                    }
-                    tokens = line.Split('\t');
-                    button = Convert.ToInt32(tokens[0]);
-                    j = Convert.ToInt32(tokens[1]);
-                    i = Convert.ToInt32(tokens[2]);
-                    if (tokens[6].Equals("NORMAL")) type = KeyType.NORMAL;
-                    else if (tokens[6].Equals("HOLD")) type = KeyType.HOLD;
-                    else if (tokens[6].Equals("COMMAND")) type = KeyType.COMMAND;
-                    else if (tokens[6].Equals("UNUSED")) type = KeyType.UNUSED;
-                    else type = KeyType.NORMAL;
-                    Configuration[button] = new KeyDef(tokens[3], tokens[5],
-                        type, tokens[4]);
-                }
-                if (nLines < 61) {
-                    Utils.errMsg($"Not enough lines in {fileName} for 60 buttons");
-                }
-                Utils.infoMsg($"Read configuration from {fileName}");
-            } catch (Exception ex) {
-                Utils.excMsg("Error reading configuration from "
-                     + fileName, ex);
-            }
-        }
-
-        public void SaveConfiguration(string fileName) {
-            // Using TAB as separator
-            try {
-                KeyDef keyDef;
-                int button;
-                using (StreamWriter outputFile = File.CreateText(fileName)) {
-                    outputFile.WriteLine("Button\tPage\tNumber\tName\tLabel\tKeyString\tType");
-                    for (int j = 0; j < 4; j++) {
-                        for (int i = 0; i < 15; i++) {
-                            button = 15 * j + i;
-                            keyDef = Configuration[button];
-                            outputFile.WriteLine($"{button}\t" +
-                                $"{j}\t" +
-                                $"{i}\t" +
-                                $"{ButtonNames[i]}\t" +
-                                $"{keyDef.Label}\t" +
-                                $"{keyDef.KeyString}\t" +
-                                $"{(KeyType)keyDef.Type}");
-                        }
-                    }
-                    outputFile.Close();
-                    Utils.infoMsg($"Saved configuration to {fileName}");
-                }
-            } catch (Exception ex) {
-                Utils.excMsg("Error writing" + fileName, ex);
-                return;
-            }
         }
 
         protected override void WndProc(ref Message message) {
@@ -628,7 +501,8 @@ namespace TabmateRelay {
             dlg.Filter = "CSV Files|*.csv";
             dlg.Title = "Select a Configuration File";
             if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
-                OpenConfiguration(dlg.FileName);
+                Configuration = ConfigurationDialog.OpenConfiguration(dlg.FileName);
+                SaveConfigurationToSettings();
             }
         }
 
@@ -638,9 +512,21 @@ namespace TabmateRelay {
             dlg.Title = "Select a Configuration File";
             dlg.CheckPathExists = true;
             if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
-                SaveConfiguration(dlg.FileName);
+                ConfigurationDialog.SaveConfiguration(Configuration, dlg.FileName);
             }
-
         }
+
+        private void OnToolsConfigurationSpecialDefaultClick(object sender, EventArgs e) {
+            Configuration = ConfigurationDialog.DefaultConfiguration();
+            SaveConfigurationToSettings();
+            Utils.infoMsg("Loaded default configuration");
+        }
+
+        private void OnToolsConfigurationSpecialTestClick(object sender, EventArgs e) {
+            Configuration = ConfigurationDialog.TestConfiguration();
+            SaveConfigurationToSettings();
+            Utils.infoMsg("Loaded test configuration");
+        }
+
     }
 }
