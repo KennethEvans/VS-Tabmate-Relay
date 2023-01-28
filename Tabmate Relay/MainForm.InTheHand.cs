@@ -24,14 +24,11 @@ namespace TabmateRelay {
                     break;
                 }
             }
-            if (logDialog != null) {
-                if (device != null) {
-                    logDialog.appendTextAndNL(Timestamp() + " TABMATE found");
-                    logDialog.appendTextAndNL("Device connected: " + device.Connected);
-                } else {
-                    logDialog.appendTextAndNL(Timestamp() + " TABMATE not found");
-                }
-                logDialog.appendTextAndNL("Client connected: " + client.Connected);
+            if (device != null) {
+                LogAppendTextAndNL(Timestamp() + " TABMATE found");
+                LogAppendTextAndNL("Device connected: " + device.Connected);
+            } else {
+                LogAppendTextAndNL(Timestamp() + " TABMATE not found");
             }
             //// Try to connect on a new thread
             //if (device != null) {
@@ -60,10 +57,8 @@ namespace TabmateRelay {
         public async Task PickBluetoothDevice() {
             BluetoothDevicePicker picker = new BluetoothDevicePicker();
             device = await picker.PickSingleDeviceAsync();
-            if (logDialog != null) {
-                logDialog.appendTextAndNL(Timestamp() + " Picked " + device.DeviceName);
-                logDialog.appendTextAndNL("Device connected: " + device.Connected);
-            }
+            LogAppendTextAndNL(Timestamp() + " Picked " + device.DeviceName);
+            LogAppendTextAndNL("Device connected: " + device.Connected);
         }
 
         /// <summary>
@@ -78,27 +73,20 @@ namespace TabmateRelay {
                 Utils.errMsg("Cannot connect: client is null");
                 return;
             }
-            if (logDialog != null) {
-                BeginInvoke(new Action(() => {
-                    logDialog.appendTextAndNL(Timestamp() + " Client trying to connect");
-                }));
-            }
+            BeginInvoke(new Action(() => {
+                LogAppendTextAndNL(Timestamp() + " Client trying to connect");
+            }));
             device.SetServiceState(BluetoothService.HumanInterfaceDevice, true);
             try {
                 client.Connect(device.DeviceAddress, BluetoothService.HumanInterfaceDevice);
-                if (logDialog != null) {
-                    BeginInvoke(new Action(() => {
-                        logDialog.appendTextAndNL(Timestamp() + " Client Connected");
-                    }));
-                }
+                BeginInvoke(new Action(() => {
+                    LogAppendTextAndNL(Timestamp() + " Client Connected");
+                }));
             } catch (Exception ex) {
                 Utils.excMsg("Client failed to connect", ex);
-                if (logDialog != null) {
-                    BeginInvoke(new Action(() => {
-                        logDialog.appendTextAndNL(Timestamp() + " Client failed to connect");
-                        ShowLogDialogInFront();
-                    }));
-                }
+                BeginInvoke(new Action(() => {
+                    LogAppendTextAndNL(Timestamp() + " Client failed to connect");
+                }));
             }
         }
 

@@ -179,6 +179,7 @@ namespace TabmateRelay {
         {
             get
             {
+                HForegroundWindow = NativeMethods.GetForegroundWindow();
                 return hForegroundWindow;
             }
 

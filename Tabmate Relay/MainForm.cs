@@ -26,7 +26,7 @@ namespace TabmateRelay {
         public const uint TABMATE_VENDOR_ID = 0x0a5c;
         public ushort usagePage = 1;
         public ushort usageCollection = 5;
-        private static ScrolledTextDialog logDialog;
+        //private static ScrolledTextDialog logDialog;
         //private Input tabmateDevice;
 
         // Use explicit SharpLib.Hid to avoid collision with Utils, Event, ...
@@ -54,18 +54,20 @@ namespace TabmateRelay {
             usagePage = Settings.Default.UsagePage;
             usageCollection = Settings.Default.UsageCollection;
 
-            logDialog = new ScrolledTextDialog(
-            Utils.getDpiAdjustedSize(this, new Size(600, 400)),
-                "Tabmate Relay Log");
-            logDialog.appendTextAndNL("Started: " + Timestamp());
-            logDialog.ButtonCancel.Visible = false;
-            //ShowLogDialogInFront();
+            LogAppendTextAndNL("Started: " + Timestamp());
+
+            //logDialog = new ScrolledTextDialog(
+            //Utils.getDpiAdjustedSize(this, new Size(600, 400)),
+            //    "Tabmate Relay Log");
+            //logDialog.appendTextAndNL("Started: " + Timestamp());
+            //logDialog.ButtonCancel.Visible = false;
+            ////ShowLogDialogInFront();
 
 
             //getHidDeviceList();
             //InitializeBluetooth();
             StartTabmate();
-            ShowLogDialogInFront();
+            //ShowLogDialogInFront();
         }
 
         public void StartTabmate() {
@@ -145,6 +147,13 @@ namespace TabmateRelay {
             LogEvent(hidEvent, flag);
 
             // Process input
+            // Don't send key sequences to our window.
+            //LogAppendTextAndNL($"Window handle is {Handle:X8}" +
+            //    $" Foreground window handle is {Tools.HForegroundWindow:X8}" +
+            //    $" ({Tools.getForegroundWindowTitle()})");
+            if (Handle.Equals(Tools.HForegroundWindow)) {
+                return;
+            }
             ulong pos;
             int button;
             bool wasPressed;
@@ -257,8 +266,15 @@ namespace TabmateRelay {
         }
 
         public void LogAppendTextAndNL(string text) {
-            if (logDialog == null) return;
-            logDialog.appendTextAndNL(text);
+            //if (logDialog == null) return;
+            //logDialog.appendTextAndNL(text);
+            textBoxLog.Text += text + NL;
+        }
+
+        public void LogAppendText(string text) {
+            //if (logDialog == null) return;
+            //logDialog.appendTextAndNL(text);
+            textBoxLog.Text += text;
         }
 
         public string Info() {
@@ -357,17 +373,17 @@ namespace TabmateRelay {
             return mac.ToString();
         }
 
-        private void ShowLogDialogInFront() {
-            // Run on the UI thread
-            BeginInvoke(new Action(() => {
-                if (logDialog != null) {
-                    logDialog.Visible = true;
-                    logDialog.BringToFront();
-                } else {
-                    Utils.infoMsg("No log has been created yet");
-                }
-            }));
-        }
+        //private void ShowLogDialogInFront() {
+        //    // Run on the UI thread
+        //    BeginInvoke(new Action(() => {
+        //        if (logDialog != null) {
+        //            logDialog.Visible = true;
+        //            logDialog.BringToFront();
+        //        } else {
+        //            Utils.infoMsg("No log has been created yet");
+        //        }
+        //    }));
+        //}
 
         protected override void WndProc(ref Message message) {
             switch (message.Msg) {
@@ -392,13 +408,13 @@ namespace TabmateRelay {
             if (client != null) {
                 client.Close();
             }
-            if (logDialog != null) {
-                logDialog.Close();
-            }
+            //if (logDialog != null) {
+            //    logDialog.Close();
+            //}
         }
 
         private void OnToolsShowLogClick(object sender, EventArgs e) {
-            ShowLogDialogInFront();
+            //ShowLogDialogInFront();
         }
 
         private void OnAboutClick(object sender, EventArgs e) {
@@ -453,9 +469,9 @@ namespace TabmateRelay {
             if (client != null) {
                 client.Close();
             }
-            if (logDialog != null) {
-                logDialog.Close();
-            }
+            //if (logDialog != null) {
+            //    logDialog.Close();
+            //}
             Close();
         }
 
@@ -476,13 +492,13 @@ namespace TabmateRelay {
                 //tabmateDevice = input;
                 string msg = "Found Tabmate" + NL + NL + HIDDeviceInfo(input);
                 Utils.infoMsg(msg);
-                logDialog.appendTextAndNL($"{Timestamp()} {msg}");
+                LogAppendTextAndNL($"{Timestamp()} {msg}");
             }
         }
 
         private void OnToolsStartTabmateClick(object sender, EventArgs e) {
             StartTabmate();
-            ShowLogDialogInFront();
+            //ShowLogDialogInFront();
         }
 
         private void OnToolsConfigurationEditClick(object sender, EventArgs e) {
@@ -528,5 +544,8 @@ namespace TabmateRelay {
             Utils.infoMsg("Loaded test configuration");
         }
 
+        private void OnClearClick(object sender, EventArgs e) {
+            textBoxLog.Text = string.Empty;
+        }
     }
 }

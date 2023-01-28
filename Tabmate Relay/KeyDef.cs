@@ -86,7 +86,7 @@ namespace TabmateRelay {
         }
 
         public void HandleKey() {
-            switch (Type) {
+                switch (Type) {
                 case KeyType.NORMAL:
                     try {
                         SendKeys.Send(KeyString);
