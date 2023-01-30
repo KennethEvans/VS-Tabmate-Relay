@@ -8,52 +8,38 @@ using WindowsInput;
 using WindowsInput.Native;
 
 namespace TabmateRelay {
-    public static class Tools {
+    public static class WinUtils {
         /// <summary>
         /// The saved value of the foreground window to be restored later.
         /// </summary>
-        private static IntPtr hForegroundWindow = IntPtr.Zero;
-
-        /// <summary>
-        /// Saves the current foreground window to be restored later.
-        /// </summary>
-        public static void saveForegroundWindow() {
-            HForegroundWindow = NativeMethods.GetForegroundWindow();
-        }
-
-        /// <summary>
-        /// Sets the current foreground window to the saved one.
-        /// </summary>
-        /// <returns></returns>
-        public static bool setForegroundWindowFromSaved() {
-            if (Tools.HForegroundWindow != IntPtr.Zero) {
-                return NativeMethods.SetForegroundWindow(HForegroundWindow);
+        public static IntPtr HForegroundWindow {
+            get {
+                return NativeMethods.GetForegroundWindow();
             }
-            return false;
         }
 
         /// <summary>
         /// Get the title for the current foreground window.
         /// </summary>
         /// <returns></returns>
-        public static string getForegroundWindowTitle() {
+        public static string GetForegroundWindowTitle() {
             IntPtr hWnd = NativeMethods.GetForegroundWindow();
             if (hWnd.Equals(IntPtr.Zero)) {
                 return "<NotFound>";
             }
-            return getWindowTitle(hWnd);
+            return GetWindowTitle(hWnd);
         }
 
         /// <summary>
         /// Gets the title for the current saved window handle.
         /// </summary>
         /// <returns></returns>
-        public static string getSavedForegroundWindowTitle() {
+        public static string GetSavedForegroundWindowTitle() {
             IntPtr hWnd = HForegroundWindow;
             if (hWnd.Equals(IntPtr.Zero)) {
                 return "NotFound>";
             }
-            return getWindowTitle(hWnd);
+            return GetWindowTitle(hWnd);
         }
 
         /// <summary>
@@ -61,7 +47,7 @@ namespace TabmateRelay {
         /// </summary>
         /// <param name="hWnd"></param>
         /// <returns></returns>
-        public static string getWindowTitle(IntPtr hWnd) {
+        public static string GetWindowTitle(IntPtr hWnd) {
             const int nChars = 256;
             StringBuilder Buff = new StringBuilder(nChars);
             if (NativeMethods.GetWindowText(hWnd, Buff, nChars) > 0) {
@@ -75,10 +61,10 @@ namespace TabmateRelay {
         /// </summary>
         /// <param name="hWnd"></param>
         /// <returns></returns>
-        public static bool getWindowIsTopmost(IntPtr hWnd) {
+        public static bool GetWindowIsTopmost(IntPtr hWnd) {
             IntPtr exStyle = NativeMethods.GetWindowLongPtr(hWnd,
                 NativeMethods.GWL_EXSTYLE);
-            return ((long)exStyle & NativeMethods.WS_EX_TOPMOST) == 
+            return ((long)exStyle & NativeMethods.WS_EX_TOPMOST) ==
                 NativeMethods.WS_EX_TOPMOST;
         }
 
@@ -87,7 +73,7 @@ namespace TabmateRelay {
         /// </summary>
         /// <param name="keyDef">The key definition to use.</param>
         /// <returns></returns>
-        public static VirtualKeyCode getKeyCode(KeyDef keyDef) {
+        public static VirtualKeyCode GetKeyCode(KeyDef keyDef) {
             VirtualKeyCode keyCode;
             if (keyDef.KeyString.Equals("^")) { // Ctrl
                 keyCode = VirtualKeyCode.CONTROL;
@@ -106,7 +92,7 @@ namespace TabmateRelay {
         /// Sends up events for any pressed keys in the given keyConfig list.
         /// </summary>
         /// <param name="keyDefs">List of key definitions to use.</param>
-        public static void sendUpEventsForPressedKeys(List<KeyDef> keyDefs) {
+        public static void SendUpEventsForPressedKeys(List<KeyDef> keyDefs) {
             if (keyDefs == null) {
                 return;
             }
@@ -114,7 +100,7 @@ namespace TabmateRelay {
                 if (keyDef.Type == KeyDef.KeyType.HOLD) {
                     VirtualKeyCode keyCode;
                     try {
-                        keyCode = Tools.getKeyCode(keyDef);
+                        keyCode = WinUtils.GetKeyCode(keyDef);
                     } catch (System.ArgumentException) {
                         continue;
                     }
@@ -131,10 +117,10 @@ namespace TabmateRelay {
         /// Generic debugging printout for examining foreground windows.
         /// </summary>
         /// <param name="method"></param>
-        public static void debugForegroundWindows(string method) {
+        public static void DebugForegroundWindows(string method) {
             Debug.Print(method + ": Foreground: "
-                + getForegroundWindowTitle()
-                + ", Saved: " + getSavedForegroundWindowTitle());
+                + GetForegroundWindowTitle()
+                + ", Saved: " + GetSavedForegroundWindowTitle());
         }
 
         /// <summary>
@@ -142,7 +128,7 @@ namespace TabmateRelay {
         /// information for the Manifest Module or for each module in the
         /// assembly.
         /// </summary>
-        public static void printModuleInfo() {
+        public static void PrintModuleInfo() {
             PortableExecutableKinds peKinds;
             ImageFileMachine imageFileMachine;
 
@@ -175,70 +161,56 @@ namespace TabmateRelay {
 #endif // Debug
         #endregion DEBUG
 
-        public static IntPtr HForegroundWindow
-        {
-            get
-            {
-                HForegroundWindow = NativeMethods.GetForegroundWindow();
-                return hForegroundWindow;
+        /// <summary>
+        /// Class for native methods.
+        /// </summary>
+        internal static class NativeMethods {
+            internal const int WS_EX_NOACTIVATE = 0x08000000;
+            internal const int GWL_EXSTYLE = -20;
+            internal const long WS_EX_TOPMOST = 0x00000008;
+
+            [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+            internal static extern int SetWindowLong(IntPtr hwnd, int index,
+                int newStyle);
+
+            [DllImport("user32.dll")]
+            internal static extern IntPtr GetForegroundWindow();
+
+            [DllImport("user32.dll")]
+            internal static extern bool SetForegroundWindow(IntPtr WindowHandle);
+
+            [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+            internal static extern int GetWindowText(IntPtr hWnd,
+                StringBuilder lpString, int nMaxCount);
+
+            internal static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
+            internal static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);
+            internal static readonly IntPtr HWND_TOP = new IntPtr(0);
+            internal static readonly IntPtr HWND_BOTTOM = new IntPtr(1);
+
+            internal const UInt32 SWP_NOSIZE = 0x0001;
+            internal const UInt32 SWP_NOMOVE = 0x0002;
+            internal const UInt32 SWP_SHOWWINDOW = 0x0040;
+
+            [DllImport("user32.dll")]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            internal static extern bool SetWindowPos(IntPtr hWnd,
+                IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+
+            [DllImport("user32.dll", EntryPoint = "GetWindowLong")]
+            internal static extern IntPtr GetWindowLongPtr32(IntPtr hWnd, int nIndex);
+
+            [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr")]
+            internal static extern IntPtr GetWindowLongPtr64(IntPtr hWnd, int nIndex);
+
+            // This static method is required because Win32 does not support
+            // GetWindowLongPtr directly
+            internal static IntPtr GetWindowLongPtr(IntPtr hWnd, int nIndex) {
+                if (IntPtr.Size == 8)
+                    return GetWindowLongPtr64(hWnd, nIndex);
+                else
+                    return GetWindowLongPtr32(hWnd, nIndex);
             }
-
-            set
-            {
-                hForegroundWindow = value;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Class for native methods.
-    /// </summary>
-    internal static class NativeMethods {
-        internal const int WS_EX_NOACTIVATE = 0x08000000;
-        internal const int GWL_EXSTYLE = -20;
-        internal const long WS_EX_TOPMOST = 0x00000008;
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        internal static extern int SetWindowLong(IntPtr hwnd, int index,
-            int newStyle);
-
-        [DllImport("user32.dll")]
-        internal static extern IntPtr GetForegroundWindow();
-
-        [DllImport("user32.dll")]
-        internal static extern bool SetForegroundWindow(IntPtr WindowHandle);
-
-        [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        internal static extern int GetWindowText(IntPtr hWnd,
-            StringBuilder lpString, int nMaxCount);
-
-        internal static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
-        internal static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);
-        internal static readonly IntPtr HWND_TOP = new IntPtr(0);
-        internal static readonly IntPtr HWND_BOTTOM = new IntPtr(1);
-
-        internal const UInt32 SWP_NOSIZE = 0x0001;
-        internal const UInt32 SWP_NOMOVE = 0x0002;
-        internal const UInt32 SWP_SHOWWINDOW = 0x0040;
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool SetWindowPos(IntPtr hWnd, 
-            IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
-
-        [DllImport("user32.dll", EntryPoint = "GetWindowLong")]
-        internal static extern IntPtr GetWindowLongPtr32(IntPtr hWnd, int nIndex);
-
-        [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr")]
-        internal static extern IntPtr GetWindowLongPtr64(IntPtr hWnd, int nIndex);
-
-        // This static method is required because Win32 does not support
-        // GetWindowLongPtr directly
-        internal static IntPtr GetWindowLongPtr(IntPtr hWnd, int nIndex) {
-            if (IntPtr.Size == 8)
-                return GetWindowLongPtr64(hWnd, nIndex);
-            else
-                return GetWindowLongPtr32(hWnd, nIndex);
         }
     }
 }

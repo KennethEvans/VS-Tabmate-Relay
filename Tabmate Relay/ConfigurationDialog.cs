@@ -222,6 +222,7 @@ namespace TabmateRelay {
         private void OnButtonResetClick(object sender, EventArgs e) {
             Cursor = Cursors.WaitCursor;
             Configuration = Configuration0;
+            tableLayoutPanelKeyDefs.Controls.Clear();
             SetValues();
             Cursor = Cursors.Default;
         }

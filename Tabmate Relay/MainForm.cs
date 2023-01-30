@@ -26,8 +26,6 @@ namespace TabmateRelay {
         public const uint TABMATE_VENDOR_ID = 0x0a5c;
         public ushort usagePage = 1;
         public ushort usageCollection = 5;
-        //private static ScrolledTextDialog logDialog;
-        //private Input tabmateDevice;
 
         // Use explicit SharpLib.Hid to avoid collision with Utils, Event, ...
         private SharpLib.Hid.Handler handler;
@@ -41,6 +39,14 @@ namespace TabmateRelay {
         const int MAX_EVENTS_PER_PERIOD = 10;
         const int PERIOD_DURATION_MS = 500;
 
+        private bool logInputReport = false;
+        private bool logFlag = false;
+        private bool logButtonIndex = true;
+        private bool logButtonLabel = false;
+        private bool logButtonKeyString = true;
+        private bool logButtonName = false;
+        private bool logActiveWindow = false;
+
         public KeyDef[] Configuration { get; set; }
 
         public MainForm() {
@@ -53,21 +59,27 @@ namespace TabmateRelay {
 
             usagePage = Settings.Default.UsagePage;
             usageCollection = Settings.Default.UsageCollection;
+            logInputReport = Settings.Default.LogInputReport;
+            logFlag = Settings.Default.LogFlag;
+            logButtonIndex = Settings.Default.LogButtonIndex;
+            logButtonLabel = Settings.Default.LogButtonLabel;
+            logButtonName = Settings.Default.LogButtonName;
+            logButtonKeyString = Settings.Default.LogButtonKeyString;
+            logActiveWindow = Settings.Default.LogActiveWindow;
+
+            logInputReportToolStripMenuItem.Checked = logInputReport;
+            logFlagToolStripMenuItem.Checked = logFlag;
+            logButtonIndexToolStripMenuItem.Checked = logButtonIndex;
+            logButtonNameToolStripMenuItem.Checked = logButtonName;
+            logButtonLabelToolStripMenuItem.Checked = logButtonLabel;
+            logButtonKeyStringToolStripMenuItem.Checked = logButtonKeyString;
+            logActiveWindowToolStripMenuItem.Checked = logActiveWindow;
 
             LogAppendTextAndNL("Started: " + Timestamp());
-
-            //logDialog = new ScrolledTextDialog(
-            //Utils.getDpiAdjustedSize(this, new Size(600, 400)),
-            //    "Tabmate Relay Log");
-            //logDialog.appendTextAndNL("Started: " + Timestamp());
-            //logDialog.ButtonCancel.Visible = false;
-            ////ShowLogDialogInFront();
-
 
             //getHidDeviceList();
             //InitializeBluetooth();
             StartTabmate();
-            //ShowLogDialogInFront();
         }
 
         public void StartTabmate() {
@@ -138,22 +150,9 @@ namespace TabmateRelay {
                 hidEvent.Device.VendorId != TABMATE_VENDOR_ID) {
                 return;
             }
-
-            // Write to log
+            List<ButtonEventData> data = new List<ButtonEventData>();
             byte[] val = hidEvent.InputReport;
             ulong flag = (ulong)BitConverter.ToInt64(val, 1);
-
-            // Write to log
-            LogEvent(hidEvent, flag);
-
-            // Process input
-            // Don't send key sequences to our window.
-            //LogAppendTextAndNL($"Window handle is {Handle:X8}" +
-            //    $" Foreground window handle is {Tools.HForegroundWindow:X8}" +
-            //    $" ({Tools.getForegroundWindowTitle()})");
-            if (Handle.Equals(Tools.HForegroundWindow)) {
-                return;
-            }
             ulong pos;
             int button;
             bool wasPressed;
@@ -167,38 +166,104 @@ namespace TabmateRelay {
                 try {
                     if (bit == pos) {
                         // Button is down
-                        if (!wasPressed) {
-                            keyDef.HandleKey();
-                        }
+                        data.Add(new ButtonEventData(button, keyDef, false));
                     } else if (wasPressed && keyDef.Type == KeyDef.KeyType.HOLD) {
                         // Button was down but is not now
-                        keyDef.HandleHoldKeyWasPressed();
+                        data.Add(new ButtonEventData(button, keyDef, wasPressed));
                     }
                 } catch (Exception ex) {
-                    LogAppendTextAndNL($"{Timestamp()} {ex.ToString()}");
+                    LogAppendTextAndNL($"{Timestamp()} {ex}");
+                }
+            }
+
+            // Write to log
+            LogEvent(hidEvent, flag, data);
+
+            if (data.Count == 0) return;
+
+            // Process input
+            // Don't send key sequences to our window.
+            //LogAppendTextAndNL($"Window handle is {Handle:X8}" +
+            //    $" Foreground window handle is {Tools.HForegroundWindow:X8}" +
+            //    $" ({Tools.getForegroundWindowTitle()})");
+            if (Handle.Equals(WinUtils.HForegroundWindow)) {
+                return;
+            }
+
+            foreach (ButtonEventData item in data) {
+                try {
+                    if (!item.WasPressed) {
+                        item.KeyDef.HandleKey();
+                    } else {
+                        item.KeyDef.HandleHoldKeyWasPressed();
+                    }
+                } catch (Exception ex) {
+                    LogAppendTextAndNL($"{Timestamp()} {ex}");
                 }
             }
         }
 
-        public void LogEvent(SharpLib.Hid.Event hidEvent, ulong flag) {
+        public void LogEvent(SharpLib.Hid.Event hidEvent, ulong flag,
+            List<ButtonEventData> data) {
             DateTime time = hidEvent.Time;
-            string strVal = hidEvent.InputReportString();
-            string updown = "??";
-            if (hidEvent.IsButtonUp) {
-                updown = "UP";
-            } else if (hidEvent.IsButtonDown) {
-                updown = "DOWN";
+            StringBuilder sb = new StringBuilder();
+            if (logInputReport) {
+                string strVal = hidEvent.InputReportString();
+                sb.Append($"{strVal} ");
+                string updown = "??";
+                if (hidEvent.IsButtonUp) {
+                    updown = "UP";
+                } else if (hidEvent.IsButtonDown) {
+                    updown = "DOWN";
+                }
+                sb.Append($"{updown} ");
             }
-            string buttonStr = "Button";
-            if (hidEvent.Usages.Count > 0) {
-                buttonStr = "Button " + hidEvent.Usages[0].ToString();
+            if (logFlag) {
+                sb.Append($"Flag: {flag:x016} ");
             }
-            LogAppendTextAndNL($"  {time.ToString("hh:mm:ss tt")} {strVal}" +
-            $" flag {flag:x016} {buttonStr} {updown}");
-
-            //// DEBUG
-            //string fgTitle = Tools.getForegroundWindowTitle();
-            //LogAppendTextAndNL($"Foreground window: {fgTitle}");
+            if (logButtonIndex || logButtonKeyString || logButtonLabel || logButtonName) {
+                StringBuilder sb1 = new StringBuilder();
+                StringBuilder sb2 = new StringBuilder();
+                StringBuilder sb3 = new StringBuilder();
+                foreach (ButtonEventData item in data) {
+                    sb1.Clear();
+                    if (logButtonIndex) {
+                        sb1.Append(item.Index).Append(" ");
+                    }
+                    if (logButtonName) {
+                        sb1.Append($"<{item.KeyDef.Name}");
+                        if (logButtonLabel)  sb1.Append(":");
+                        else sb1.Append("> ");
+                    }
+                    if (logButtonLabel) {
+                        if(logButtonName) sb1.Append($"{item.KeyDef.Label}> ");
+                        else sb1.Append($"<{item.KeyDef.Label}> ");
+                    }
+                    if (logButtonKeyString) {
+                        sb1.Append($"{item.KeyDef.KeyString} ");
+                    }
+                    if (sb1.Length > 0) {
+                        sb2.Append("[");
+                        string truncated = sb1.ToString();
+                        if (truncated.EndsWith(" ")) {
+                            truncated = truncated.Substring(0, truncated.Length - 1);
+                        }
+                        sb2.Append(truncated).Append("], ");
+                    }
+                }
+                if (sb2.Length > 0) {
+                    sb.Append("{");
+                    string truncated = sb2.ToString();
+                    if (truncated.EndsWith(", ")) {
+                        truncated = truncated.Substring(0, truncated.Length - 2);
+                    }
+                    sb.Append(truncated).Append("} ");
+                }
+            }
+            if (logActiveWindow) {
+                sb.Append($"Window: {WinUtils.GetForegroundWindowTitle()} ");
+            }
+            LogAppendTextAndNL($"  {time.ToString("hh:mm:ss tt")} {sb}");
         }
 
         public Input FindTabmate() {
@@ -266,15 +331,11 @@ namespace TabmateRelay {
         }
 
         public void LogAppendTextAndNL(string text) {
-            //if (logDialog == null) return;
-            //logDialog.appendTextAndNL(text);
-            textBoxLog.Text += text + NL;
+            textBoxLog.AppendText(text + NL);
         }
 
         public void LogAppendText(string text) {
-            //if (logDialog == null) return;
-            //logDialog.appendTextAndNL(text);
-            textBoxLog.Text += text;
+            textBoxLog.AppendText(text);
         }
 
         public string Info() {
@@ -373,18 +434,6 @@ namespace TabmateRelay {
             return mac.ToString();
         }
 
-        //private void ShowLogDialogInFront() {
-        //    // Run on the UI thread
-        //    BeginInvoke(new Action(() => {
-        //        if (logDialog != null) {
-        //            logDialog.Visible = true;
-        //            logDialog.BringToFront();
-        //        } else {
-        //            Utils.infoMsg("No log has been created yet");
-        //        }
-        //    }));
-        //}
-
         protected override void WndProc(ref Message message) {
             switch (message.Msg) {
                 case Const.WM_INPUT:
@@ -408,13 +457,6 @@ namespace TabmateRelay {
             if (client != null) {
                 client.Close();
             }
-            //if (logDialog != null) {
-            //    logDialog.Close();
-            //}
-        }
-
-        private void OnToolsShowLogClick(object sender, EventArgs e) {
-            //ShowLogDialogInFront();
         }
 
         private void OnAboutClick(object sender, EventArgs e) {
@@ -469,9 +511,6 @@ namespace TabmateRelay {
             if (client != null) {
                 client.Close();
             }
-            //if (logDialog != null) {
-            //    logDialog.Close();
-            //}
             Close();
         }
 
@@ -498,7 +537,6 @@ namespace TabmateRelay {
 
         private void OnToolsStartTabmateClick(object sender, EventArgs e) {
             StartTabmate();
-            //ShowLogDialogInFront();
         }
 
         private void OnToolsConfigurationEditClick(object sender, EventArgs e) {
@@ -546,6 +584,89 @@ namespace TabmateRelay {
 
         private void OnClearClick(object sender, EventArgs e) {
             textBoxLog.Text = string.Empty;
+        }
+
+        private void OnToolsLogInputReportChecked(object sender, EventArgs e) {
+            bool isChecked = logInputReportToolStripMenuItem.Checked;
+            if (logInputReport != isChecked) {
+                logInputReport = logInputReportToolStripMenuItem.Checked;
+                Settings.Default.LogInputReport = logInputReport;
+                Settings.Default.Save();
+            }
+        }
+
+        private void OnToolsLogFlagChecked(object sender, EventArgs e) {
+            bool isChecked = logFlagToolStripMenuItem.Checked;
+            if (logFlag != isChecked) {
+                logFlag = logFlagToolStripMenuItem.Checked;
+                Settings.Default.LogFlag = logFlag;
+                Settings.Default.Save();
+            }
+        }
+
+        private void OnToolsLogButtonIndexChecked(object sender, EventArgs e) {
+            bool isChecked = logButtonIndexToolStripMenuItem.Checked;
+            if (logButtonIndex != isChecked) {
+                logButtonIndex = logButtonIndexToolStripMenuItem.Checked;
+                Settings.Default.LogButtonIndex = logButtonIndex;
+                Settings.Default.Save();
+            }
+        }
+
+        private void OnToolsLogButtonLabelChecked(object sender, EventArgs e) {
+            bool isChecked = logButtonLabelToolStripMenuItem.Checked;
+            if (logButtonLabel != isChecked) {
+                logButtonLabel = logButtonLabelToolStripMenuItem.Checked;
+                Settings.Default.LogButtonLabel = logButtonLabel;
+                Settings.Default.Save();
+            }
+        }
+
+        private void OnToolsLogButtonKeyStringChecked(object sender, EventArgs e) {
+            bool isChecked = logButtonKeyStringToolStripMenuItem.Checked;
+            if (logButtonKeyString != isChecked) {
+                logButtonKeyString = logButtonKeyStringToolStripMenuItem.Checked;
+                Settings.Default.LogButtonKeyString = logButtonKeyString;
+                Settings.Default.Save();
+            }
+        }
+
+        private void OnToolsLogButtonNameChecked(object sender, EventArgs e) {
+            bool isChecked = logButtonNameToolStripMenuItem.Checked;
+            if (logButtonName != isChecked) {
+                logButtonName = logButtonNameToolStripMenuItem.Checked;
+                Settings.Default.LogButtonName = logButtonName;
+                Settings.Default.Save();
+            }
+        }
+
+        private void OnToolsLogActiveWindowChecked(object sender, EventArgs e) {
+            bool isChecked = logActiveWindowToolStripMenuItem.Checked;
+            if (logActiveWindow != isChecked) {
+                logActiveWindow = logActiveWindowToolStripMenuItem.Checked;
+                Settings.Default.LogActiveWindow = logActiveWindow;
+                Settings.Default.Save();
+            }
+        }
+
+        private void OnFormEnter(object sender, EventArgs e) {
+            // Make it go to the bottom
+            textBoxLog.AppendText("Entering" + NL);
+        }
+    }
+
+    /// <summary>
+    /// Class to hold data for buttons involved in an event.
+    /// </summary>
+    public class ButtonEventData {
+        public int Index { get; set; }
+        public KeyDef KeyDef { get; set; }
+        public bool WasPressed { get; set; }
+
+        public ButtonEventData(int index, KeyDef keyDef, bool pressed) {
+            Index = index;
+            KeyDef = keyDef;
+            WasPressed = pressed;
         }
     }
 }

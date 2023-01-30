@@ -32,9 +32,9 @@
             this.labelBlinkRed = new System.Windows.Forms.Label();
             this.labelBlinkBlue = new System.Windows.Forms.Label();
             this.flowLayoutPanelButtons = new System.Windows.Forms.FlowLayoutPanel();
-            this.buttonOk = new System.Windows.Forms.Button();
             this.buttonReset = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
+            this.buttonOk = new System.Windows.Forms.Button();
             this.tableLayoutPanelTop.SuspendLayout();
             this.panelKeyDefs.SuspendLayout();
             this.tableLayoutPanelKeyDefs.SuspendLayout();
@@ -116,7 +116,7 @@
             this.labelRed.Name = "labelRed";
             this.labelRed.Size = new System.Drawing.Size(534, 32);
             this.labelRed.TabIndex = 0;
-            this.labelRed.Text = "Red";
+            this.labelRed.Text = "Solid Red";
             this.labelRed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // labelBlue
@@ -129,7 +129,7 @@
             this.labelBlue.Name = "labelBlue";
             this.labelBlue.Size = new System.Drawing.Size(534, 32);
             this.labelBlue.TabIndex = 1;
-            this.labelBlue.Text = "Blue";
+            this.labelBlue.Text = "Solid Blue";
             this.labelBlue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // labelBlinkRed
@@ -142,7 +142,7 @@
             this.labelBlinkRed.Name = "labelBlinkRed";
             this.labelBlinkRed.Size = new System.Drawing.Size(534, 32);
             this.labelBlinkRed.TabIndex = 2;
-            this.labelBlinkRed.Text = "Blink Red";
+            this.labelBlinkRed.Text = "Flash Red";
             this.labelBlinkRed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // labelBlinkBlue
@@ -155,7 +155,7 @@
             this.labelBlinkBlue.Name = "labelBlinkBlue";
             this.labelBlinkBlue.Size = new System.Drawing.Size(536, 32);
             this.labelBlinkBlue.TabIndex = 3;
-            this.labelBlinkBlue.Text = "Blink Blue";
+            this.labelBlinkBlue.Text = "Flash Blue";
             this.labelBlinkBlue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // flowLayoutPanelButtons
@@ -170,17 +170,6 @@
             this.flowLayoutPanelButtons.Name = "flowLayoutPanelButtons";
             this.flowLayoutPanelButtons.Size = new System.Drawing.Size(341, 48);
             this.flowLayoutPanelButtons.TabIndex = 2;
-            // 
-            // buttonOk
-            // 
-            this.buttonOk.AutoSize = true;
-            this.buttonOk.Location = new System.Drawing.Point(273, 3);
-            this.buttonOk.Name = "buttonOk";
-            this.buttonOk.Size = new System.Drawing.Size(65, 42);
-            this.buttonOk.TabIndex = 3;
-            this.buttonOk.Text = "OK";
-            this.buttonOk.UseVisualStyleBackColor = true;
-            this.buttonOk.Click += new System.EventHandler(this.OnButtonOkClick);
             // 
             // buttonReset
             // 
@@ -203,6 +192,17 @@
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.OnButtonCancelClick);
+            // 
+            // buttonOk
+            // 
+            this.buttonOk.AutoSize = true;
+            this.buttonOk.Location = new System.Drawing.Point(273, 3);
+            this.buttonOk.Name = "buttonOk";
+            this.buttonOk.Size = new System.Drawing.Size(65, 42);
+            this.buttonOk.TabIndex = 3;
+            this.buttonOk.Text = "OK";
+            this.buttonOk.UseVisualStyleBackColor = true;
+            this.buttonOk.Click += new System.EventHandler(this.OnButtonOkClick);
             // 
             // ConfigurationDialog
             // 

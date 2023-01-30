@@ -4,7 +4,7 @@
       <TargetFramework>net48</TargetFramework>
       <UseWindowsForms>true</UseWindowsForms>
       <Authors>Kenneth Evans</Authors>
-      <Description>Tabmate Relay</Description>
+      <Description>If this program works, it was written by Kenneth Evans.</Description>
       <Copyright>Copyright © Kenneth Evans 2023</Copyright>
       <RootNamespace>TabmateRelay</RootNamespace>
       <AssemblyName>Tabmate Relay</AssemblyName>
@@ -33,6 +33,7 @@
     <Reference Include="Utils">
       <HintPath>..\..\Utils\Utils\bin\Release\net48\Utils.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Settings.Designer.cs">
@@ -43,6 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Update="Help\Tabmate Relay.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="LICENSE">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Properties\Settings.settings">

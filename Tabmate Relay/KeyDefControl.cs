@@ -18,7 +18,7 @@ namespace TabmateRelay {
         }
 
         public void SetValues() {
-            labelButton.Text = KeyDef.Button;
+            labelButton.Text = KeyDef.Name;
             textBoxLabel.Text = KeyDef.Label;
             textBoxKeyString.Text = KeyDef.KeyString;
             switch (KeyDef.Type) {
@@ -39,7 +39,7 @@ namespace TabmateRelay {
 
         public KeyDef GetValues() {
             KeyDef newKeyDef= new KeyDef();
-            newKeyDef.Button = labelButton.Text;
+            newKeyDef.Name = labelButton.Text;
             newKeyDef.Label = textBoxLabel.Text;
             newKeyDef.KeyString = textBoxKeyString.Text;
             if (radioButtonNormal.Checked) newKeyDef.Type = KeyDef.KeyType.NORMAL;
@@ -80,7 +80,7 @@ namespace TabmateRelay {
             try {
                 newKeyDef = JsonConvert.DeserializeObject<KeyDef>(json);
                 // Dont't paste the name of the key
-                newKeyDef.Button = KeyDef.Button;
+                newKeyDef.Name = KeyDef.Name;
             } catch (Exception ex) {
                 Utils.excMsg(
                     "Error converting clipboard contents to a "

@@ -58,5 +58,89 @@ namespace TabmateRelay.Properties {
                 this["Configuration"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool LogInputReport {
+            get {
+                return ((bool)(this["LogInputReport"]));
+            }
+            set {
+                this["LogInputReport"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool LogFlag {
+            get {
+                return ((bool)(this["LogFlag"]));
+            }
+            set {
+                this["LogFlag"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool LogButtonIndex {
+            get {
+                return ((bool)(this["LogButtonIndex"]));
+            }
+            set {
+                this["LogButtonIndex"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool LogButtonLabel {
+            get {
+                return ((bool)(this["LogButtonLabel"]));
+            }
+            set {
+                this["LogButtonLabel"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool LogButtonKeyString {
+            get {
+                return ((bool)(this["LogButtonKeyString"]));
+            }
+            set {
+                this["LogButtonKeyString"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool LogButtonName {
+            get {
+                return ((bool)(this["LogButtonName"]));
+            }
+            set {
+                this["LogButtonName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool LogActiveWindow {
+            get {
+                return ((bool)(this["LogActiveWindow"]));
+            }
+            set {
+                this["LogActiveWindow"] = value;
+            }
+        }
     }
 }
