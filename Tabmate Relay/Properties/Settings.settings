@@ -11,6 +11,9 @@
     <Setting Name="Configuration" Type="System.String" Scope="User">
       <Value Profile="(Default)">null</Value>
     </Setting>
+    <Setting Name="LogOn" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
     <Setting Name="LogInputReport" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
@@ -18,13 +21,16 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="LogButtonIndex" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="LogButtonType" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="LogButtonLabel" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="LogButtonKeyString" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="LogButtonName" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>

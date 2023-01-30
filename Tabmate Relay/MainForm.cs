@@ -39,10 +39,12 @@ namespace TabmateRelay {
         const int MAX_EVENTS_PER_PERIOD = 10;
         const int PERIOD_DURATION_MS = 500;
 
+        private bool logOn = true;
         private bool logInputReport = false;
         private bool logFlag = false;
         private bool logButtonIndex = true;
-        private bool logButtonLabel = false;
+        private bool logButtonType = true;
+        private bool logButtonLabel = true;
         private bool logButtonKeyString = true;
         private bool logButtonName = false;
         private bool logActiveWindow = false;
@@ -59,17 +61,21 @@ namespace TabmateRelay {
 
             usagePage = Settings.Default.UsagePage;
             usageCollection = Settings.Default.UsageCollection;
+            logOn = Settings.Default.LogOn;
             logInputReport = Settings.Default.LogInputReport;
             logFlag = Settings.Default.LogFlag;
             logButtonIndex = Settings.Default.LogButtonIndex;
+            logButtonType = Settings.Default.LogButtonType;
             logButtonLabel = Settings.Default.LogButtonLabel;
             logButtonName = Settings.Default.LogButtonName;
             logButtonKeyString = Settings.Default.LogButtonKeyString;
             logActiveWindow = Settings.Default.LogActiveWindow;
 
+            logOnToolStripMenuItem.Checked = logOn;
             logInputReportToolStripMenuItem.Checked = logInputReport;
             logFlagToolStripMenuItem.Checked = logFlag;
             logButtonIndexToolStripMenuItem.Checked = logButtonIndex;
+            logButtonTypeToolStripMenuItem.Checked = logButtonType;
             logButtonNameToolStripMenuItem.Checked = logButtonName;
             logButtonLabelToolStripMenuItem.Checked = logButtonLabel;
             logButtonKeyStringToolStripMenuItem.Checked = logButtonKeyString;
@@ -177,7 +183,7 @@ namespace TabmateRelay {
             }
 
             // Write to log
-            LogEvent(hidEvent, flag, data);
+            if (logOn) LogEvent(hidEvent, flag, data);
 
             if (data.Count == 0) return;
 
@@ -221,43 +227,53 @@ namespace TabmateRelay {
             if (logFlag) {
                 sb.Append($"Flag: {flag:x016} ");
             }
-            if (logButtonIndex || logButtonKeyString || logButtonLabel || logButtonName) {
+            if (logButtonIndex || logButtonType || logButtonKeyString ||
+                logButtonLabel || logButtonName) {
                 StringBuilder sb1 = new StringBuilder();
                 StringBuilder sb2 = new StringBuilder();
-                StringBuilder sb3 = new StringBuilder();
-                foreach (ButtonEventData item in data) {
-                    sb1.Clear();
-                    if (logButtonIndex) {
-                        sb1.Append(item.Index).Append(" ");
-                    }
-                    if (logButtonName) {
-                        sb1.Append($"<{item.KeyDef.Name}");
-                        if (logButtonLabel)  sb1.Append(":");
-                        else sb1.Append("> ");
-                    }
-                    if (logButtonLabel) {
-                        if(logButtonName) sb1.Append($"{item.KeyDef.Label}> ");
-                        else sb1.Append($"<{item.KeyDef.Label}> ");
-                    }
-                    if (logButtonKeyString) {
-                        sb1.Append($"{item.KeyDef.KeyString} ");
-                    }
-                    if (sb1.Length > 0) {
-                        sb2.Append("[");
-                        string truncated = sb1.ToString();
-                        if (truncated.EndsWith(" ")) {
-                            truncated = truncated.Substring(0, truncated.Length - 1);
+                if (flag == 0) {
+                    sb.Append("{[All buttons Up]} ");
+                } else {
+                    foreach (ButtonEventData item in data) {
+                        sb1.Clear();
+                        if (logButtonIndex) {
+                            sb1.Append(item.Index).Append(" ");
                         }
-                        sb2.Append(truncated).Append("], ");
+                        if (logButtonName) {
+                            sb1.Append($"<{item.KeyDef.Name}");
+                            if (logButtonLabel) sb1.Append(":");
+                            else sb1.Append("> ");
+                        }
+                        if (logButtonLabel) {
+                            if (logButtonName) sb1.Append($"{item.KeyDef.Label}> ");
+                            else sb1.Append($"<{item.KeyDef.Label}> ");
+                        }
+                        if (logButtonKeyString) {
+                            sb1.Append($"{item.KeyDef.KeyString} ");
+                        }
+                        if (logButtonType) {
+                            string updown = item.WasPressed ? "(Up)" : "(Dn)";
+                            string typeStr = item.KeyDef.Type.ToString().Substring(0, 1);
+                            sb1.Append($"{typeStr}{updown}");
+                            sb1.Append(" ");
+                        }
+                        if (sb1.Length > 0) {
+                            sb2.Append("[");
+                            string truncated = sb1.ToString();
+                            if (truncated.EndsWith(" ")) {
+                                truncated = truncated.Substring(0, truncated.Length - 1);
+                            }
+                            sb2.Append(truncated).Append("], ");
+                        }
                     }
-                }
-                if (sb2.Length > 0) {
-                    sb.Append("{");
-                    string truncated = sb2.ToString();
-                    if (truncated.EndsWith(", ")) {
-                        truncated = truncated.Substring(0, truncated.Length - 2);
+                    if (sb2.Length > 0) {
+                        sb.Append("{");
+                        string truncated = sb2.ToString();
+                        if (truncated.EndsWith(", ")) {
+                            truncated = truncated.Substring(0, truncated.Length - 2);
+                        }
+                        sb.Append(truncated).Append("} ");
                     }
-                    sb.Append(truncated).Append("} ");
                 }
             }
             if (logActiveWindow) {
@@ -459,6 +475,11 @@ namespace TabmateRelay {
             }
         }
 
+        private void OnControlEnter(object sender, EventArgs e) {
+            // Make it go to the bottom
+            textBoxLog.Select(textBoxLog.Text.Length, 0);
+        }
+
         private void OnAboutClick(object sender, EventArgs e) {
             Assembly assembly = Assembly.GetExecutingAssembly();
             Image image = null;
@@ -595,6 +616,15 @@ namespace TabmateRelay {
             }
         }
 
+        private void OnToolsLogOnChecked(object sender, EventArgs e) {
+            bool isChecked = logOnToolStripMenuItem.Checked;
+            if (logOn != isChecked) {
+                logOn = logOnToolStripMenuItem.Checked;
+                Settings.Default.LogOn = logOn;
+                Settings.Default.Save();
+            }
+        }
+
         private void OnToolsLogFlagChecked(object sender, EventArgs e) {
             bool isChecked = logFlagToolStripMenuItem.Checked;
             if (logFlag != isChecked) {
@@ -609,6 +639,15 @@ namespace TabmateRelay {
             if (logButtonIndex != isChecked) {
                 logButtonIndex = logButtonIndexToolStripMenuItem.Checked;
                 Settings.Default.LogButtonIndex = logButtonIndex;
+                Settings.Default.Save();
+            }
+        }
+
+        private void OnToolsLogButtonTypeChecked(object sender, EventArgs e) {
+            bool isChecked = logButtonTypeToolStripMenuItem.Checked;
+            if (logButtonType != isChecked) {
+                logButtonType = logButtonTypeToolStripMenuItem.Checked;
+                Settings.Default.LogButtonType = logButtonType;
                 Settings.Default.Save();
             }
         }
@@ -647,11 +686,6 @@ namespace TabmateRelay {
                 Settings.Default.LogActiveWindow = logActiveWindow;
                 Settings.Default.Save();
             }
-        }
-
-        private void OnFormEnter(object sender, EventArgs e) {
-            // Make it go to the bottom
-            textBoxLog.AppendText("Entering" + NL);
         }
     }
 

@@ -43,10 +43,12 @@ namespace TabmateRelay {
             this.logInputReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logFlagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logButtonIndexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.logButtonTypeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logButtonLabelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logButtonKeyStringToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logButtonNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logActiveWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.logOnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startTabmateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,10 +63,10 @@ namespace TabmateRelay {
             this.flowLayoutPanelButtons = new System.Windows.Forms.FlowLayoutPanel();
             this.buttonClear = new System.Windows.Forms.Button();
             this.buttonQuit = new System.Windows.Forms.Button();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanelTop = new System.Windows.Forms.TableLayoutPanel();
             this.menuStrip1.SuspendLayout();
             this.flowLayoutPanelButtons.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
+            this.tableLayoutPanelTop.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -76,7 +78,7 @@ namespace TabmateRelay {
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1332, 60);
+            this.menuStrip1.Size = new System.Drawing.Size(1332, 49);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -85,13 +87,13 @@ namespace TabmateRelay {
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(87, 50);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(87, 45);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(230, 54);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.OnFileExitClick);
             // 
@@ -110,7 +112,7 @@ namespace TabmateRelay {
             this.pickDeviceToolStripMenuItem,
             this.connectToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(111, 50);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(111, 45);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
             // configurationToolStripMenuItem
@@ -186,10 +188,12 @@ namespace TabmateRelay {
             this.logInputReportToolStripMenuItem,
             this.logFlagToolStripMenuItem,
             this.logButtonIndexToolStripMenuItem,
+            this.logButtonTypeToolStripMenuItem,
             this.logButtonLabelToolStripMenuItem,
             this.logButtonKeyStringToolStripMenuItem,
             this.logButtonNameToolStripMenuItem,
-            this.logActiveWindowToolStripMenuItem});
+            this.logActiveWindowToolStripMenuItem,
+            this.logOnToolStripMenuItem});
             this.loggingToolStripMenuItem.Name = "loggingToolStripMenuItem";
             this.loggingToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
             this.loggingToolStripMenuItem.Text = "Logging";
@@ -217,6 +221,14 @@ namespace TabmateRelay {
             this.logButtonIndexToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
             this.logButtonIndexToolStripMenuItem.Text = "Log Index";
             this.logButtonIndexToolStripMenuItem.CheckedChanged += new System.EventHandler(this.OnToolsLogButtonIndexChecked);
+            // 
+            // logButtonTypeToolStripMenuItem
+            // 
+            this.logButtonTypeToolStripMenuItem.CheckOnClick = true;
+            this.logButtonTypeToolStripMenuItem.Name = "logButtonTypeToolStripMenuItem";
+            this.logButtonTypeToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
+            this.logButtonTypeToolStripMenuItem.Text = "Log Type";
+            this.logButtonTypeToolStripMenuItem.CheckedChanged += new System.EventHandler(this.OnToolsLogButtonTypeChecked);
             // 
             // logButtonLabelToolStripMenuItem
             // 
@@ -249,6 +261,14 @@ namespace TabmateRelay {
             this.logActiveWindowToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
             this.logActiveWindowToolStripMenuItem.Text = "Log Active Window";
             this.logActiveWindowToolStripMenuItem.CheckedChanged += new System.EventHandler(this.OnToolsLogActiveWindowChecked);
+            // 
+            // logOnToolStripMenuItem
+            // 
+            this.logOnToolStripMenuItem.CheckOnClick = true;
+            this.logOnToolStripMenuItem.Name = "logOnToolStripMenuItem";
+            this.logOnToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
+            this.logOnToolStripMenuItem.Text = "Logging On";
+            this.logOnToolStripMenuItem.CheckedChanged += new System.EventHandler(this.OnToolsLogOnChecked);
             // 
             // toolStripSeparator1
             // 
@@ -309,7 +329,7 @@ namespace TabmateRelay {
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(104, 50);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(104, 45);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // aboutToolStripMenuItem
@@ -322,13 +342,13 @@ namespace TabmateRelay {
             // textBoxLog
             // 
             this.textBoxLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxLog.Location = new System.Drawing.Point(3, 62);
+            this.textBoxLog.Location = new System.Drawing.Point(3, 51);
             this.textBoxLog.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBoxLog.Name = "textBoxLog";
-            this.textBoxLog.Size = new System.Drawing.Size(1326, 850);
+            this.textBoxLog.Size = new System.Drawing.Size(1326, 857);
             this.textBoxLog.TabIndex = 4;
             this.textBoxLog.Text = "";
-            this.textBoxLog.Enter += new System.EventHandler(this.OnFormEnter);
+            this.textBoxLog.Enter += new System.EventHandler(this.OnControlEnter);
             // 
             // flowLayoutPanelButtons
             // 
@@ -338,7 +358,7 @@ namespace TabmateRelay {
             this.flowLayoutPanelButtons.BackColor = System.Drawing.SystemColors.Control;
             this.flowLayoutPanelButtons.Controls.Add(this.buttonClear);
             this.flowLayoutPanelButtons.Controls.Add(this.buttonQuit);
-            this.flowLayoutPanelButtons.Location = new System.Drawing.Point(575, 916);
+            this.flowLayoutPanelButtons.Location = new System.Drawing.Point(575, 912);
             this.flowLayoutPanelButtons.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.flowLayoutPanelButtons.Name = "flowLayoutPanelButtons";
             this.flowLayoutPanelButtons.Size = new System.Drawing.Size(181, 46);
@@ -373,43 +393,44 @@ namespace TabmateRelay {
             this.buttonQuit.UseVisualStyleBackColor = true;
             this.buttonQuit.Click += new System.EventHandler(this.OnFileExitClick);
             // 
-            // tableLayoutPanel1
+            // tableLayoutPanelTop
             // 
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.menuStrip1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.textBoxLog, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanelButtons, 0, 2);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1332, 964);
-            this.tableLayoutPanel1.TabIndex = 6;
+            this.tableLayoutPanelTop.AutoSize = true;
+            this.tableLayoutPanelTop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanelTop.ColumnCount = 1;
+            this.tableLayoutPanelTop.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanelTop.Controls.Add(this.menuStrip1, 0, 0);
+            this.tableLayoutPanelTop.Controls.Add(this.textBoxLog, 0, 1);
+            this.tableLayoutPanelTop.Controls.Add(this.flowLayoutPanelButtons, 0, 2);
+            this.tableLayoutPanelTop.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanelTop.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanelTop.Name = "tableLayoutPanelTop";
+            this.tableLayoutPanelTop.RowCount = 3;
+            this.tableLayoutPanelTop.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanelTop.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanelTop.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanelTop.Size = new System.Drawing.Size(1329, 960);
+            this.tableLayoutPanelTop.TabIndex = 6;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 31F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1329, 960);
-            this.Controls.Add(this.tableLayoutPanel1);
+            this.Controls.Add(this.tableLayoutPanelTop);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "MainForm";
             this.Text = "Tabmate Relay";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnFormClosing);
-            this.Enter += new System.EventHandler(this.OnFormEnter);
+            this.Enter += new System.EventHandler(this.OnControlEnter);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.flowLayoutPanelButtons.ResumeLayout(false);
             this.flowLayoutPanelButtons.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
+            this.tableLayoutPanelTop.ResumeLayout(false);
+            this.tableLayoutPanelTop.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -442,7 +463,7 @@ namespace TabmateRelay {
         private FlowLayoutPanel flowLayoutPanelButtons;
         private Button buttonClear;
         private Button buttonQuit;
-        private TableLayoutPanel tableLayoutPanel1;
+        private TableLayoutPanel tableLayoutPanelTop;
         private ToolStripSeparator toolStripSeparator3;
         private ToolStripMenuItem loggingToolStripMenuItem;
         private ToolStripMenuItem logInputReportToolStripMenuItem;
@@ -453,5 +474,7 @@ namespace TabmateRelay {
         private ToolStripMenuItem logButtonNameToolStripMenuItem;
         private ToolStripMenuItem logActiveWindowToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator1;
+        private ToolStripMenuItem logButtonTypeToolStripMenuItem;
+        private ToolStripMenuItem logOnToolStripMenuItem;
     }
 }

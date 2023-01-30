@@ -61,6 +61,18 @@ namespace TabmateRelay.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool LogOn {
+            get {
+                return ((bool)(this["LogOn"]));
+            }
+            set {
+                this["LogOn"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool LogInputReport {
             get {
@@ -85,7 +97,7 @@ namespace TabmateRelay.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool LogButtonIndex {
             get {
                 return ((bool)(this["LogButtonIndex"]));
@@ -97,7 +109,19 @@ namespace TabmateRelay.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool LogButtonType {
+            get {
+                return ((bool)(this["LogButtonType"]));
+            }
+            set {
+                this["LogButtonType"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool LogButtonLabel {
             get {
                 return ((bool)(this["LogButtonLabel"]));
@@ -109,7 +133,7 @@ namespace TabmateRelay.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool LogButtonKeyString {
             get {
                 return ((bool)(this["LogButtonKeyString"]));
