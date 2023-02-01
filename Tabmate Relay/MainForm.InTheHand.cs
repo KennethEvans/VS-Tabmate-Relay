@@ -1,8 +1,11 @@
-﻿using InTheHand.Net.Bluetooth;
+﻿#undef USE_CONNECT
+
+using InTheHand.Net.Bluetooth;
 using InTheHand.Net.Sockets;
 using KEUtils.Utils;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace TabmateRelay {
@@ -24,19 +27,21 @@ namespace TabmateRelay {
                     break;
                 }
             }
-            if (device != null) {
-                LogAppendTextAndNL(Timestamp() + " TABMATE found");
-                LogAppendTextAndNL("Device connected: " + device.Connected);
-            } else {
-                LogAppendTextAndNL(Timestamp() + " TABMATE not found");
-            }
-            //// Try to connect on a new thread
             //if (device != null) {
-            //    Thread thread = new Thread(new ThreadStart(connectClient));
-            //    thread.Name = "Connection Thread";
-            //    thread.Priority = ThreadPriority.AboveNormal;
-            //    thread.Start();
+            //    LogAppendTextAndNL(Timestamp() + " TABMATE found");
+            //    LogAppendTextAndNL("Device connected: " + device.Connected);
+            //} else {
+            //    LogAppendTextAndNL(Timestamp() + " TABMATE not found");
             //}
+#if USE_CONNECT
+            // Try to connect on a new thread
+            if (device != null) {
+                Thread thread = new Thread(new ThreadStart(connectClient));
+                thread.Name = "Connection Thread";
+                thread.Priority = ThreadPriority.AboveNormal;
+                thread.Start();
+            }
+#endif
         }
 
         public string DeviceInfo(BluetoothDeviceInfo info, bool verbose = false) {
@@ -50,19 +55,25 @@ namespace TabmateRelay {
             foreach (Guid service in services) {
                 msg += "    " + service + NL;
             }
-
             return msg;
         }
 
         public async Task PickBluetoothDevice() {
             BluetoothDevicePicker picker = new BluetoothDevicePicker();
             device = await picker.PickSingleDeviceAsync();
-            LogAppendTextAndNL(Timestamp() + " Picked " + device.DeviceName);
-            LogAppendTextAndNL("Device connected: " + device.Connected);
+            if (device == null) {
+                LogAppendTextAndNL($"{Timestamp()} Device not picked");
+            } else {
+                LogAppendTextAndNL($"{Timestamp()}" +
+                    $" Picked {device.DeviceName}:" +
+                    $" Connected: {device.Connected}");
+            }
         }
 
+#if USE_CONNECT
         /// <summary>
         /// This connects the client. It is intended to be run on a separate thread.
+        /// Connecting to the client does not work, so this method is unused.
         /// </summary>
         public void connectClient() {
             if (client == null) {
@@ -89,11 +100,29 @@ namespace TabmateRelay {
                 }));
             }
         }
+#endif
 
-
-
-
-
-
+#if USE_CONNECT
+        /// <summary>
+        /// Tries to connect to the Bluetooth client. This cannot be done and
+        /// this method is not used.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnToolsConnectClick(object sender, EventArgs e) {
+            if (client == null) {
+                Utils.errMsg("There is no Bluetooth client");
+                return;
+            }
+            if (device == null) {
+                Utils.errMsg("There is no device connected");
+                return;
+            }
+            Thread thread = new Thread(new ThreadStart(connectClient));
+            thread.Name = "Connection Thread";
+            thread.Priority = ThreadPriority.AboveNormal;
+            thread.Start();
+        }
+#endif
     }
 }

@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Interop;
 using TabmateRelay.Properties;
 
 namespace TabmateRelay {
@@ -48,6 +49,8 @@ namespace TabmateRelay {
         private bool logButtonKeyString = true;
         private bool logButtonName = false;
         private bool logActiveWindow = false;
+
+        private int nEvents = 0;
 
         public KeyDef[] Configuration { get; set; }
 
@@ -89,12 +92,13 @@ namespace TabmateRelay {
         }
 
         public void StartTabmate() {
-            LogAppendTextAndNL($"{NL} {Timestamp()} Starting Tabmate");
+            LogAppendTextAndNL($"{NL}{Timestamp()} Starting Tabmate");
             // Dispose of any existing handler
             if (handler != null) {
                 handler.Dispose();
                 handler = null;
             }
+            string msg;
 
             // Make a RAWINPUTDEVICE array with one item
             RAWINPUTDEVICE[] rid = new RAWINPUTDEVICE[1];
@@ -107,13 +111,20 @@ namespace TabmateRelay {
             // Set the handler, using defaults for the other input values
             handler = new SharpLib.Hid.Handler(rid);
             if (!handler.IsRegistered) {
-                string msg = "Failed to register handler" + NL
+                msg = "Failed to register handler" + NL
                     + Marshal.GetLastWin32Error().ToString();
                 Utils.errMsg(msg);
                 LogAppendTextAndNL(msg);
                 return;
             }
             handler.OnHidEvent += HandleHidEventThreadSafe;
+            Input device = FindTabmate();
+            if (device == null) {
+                msg = "Tabmate not currently found but listening for it";
+            } else {
+                msg = "Tabmate found";
+            }
+            LogAppendTextAndNL($"{Timestamp()} {msg}");
         }
 
         /// <summary>
@@ -181,6 +192,8 @@ namespace TabmateRelay {
                     LogAppendTextAndNL($"{Timestamp()} {ex}");
                 }
             }
+
+            nEvents++;
 
             // Write to log
             if (logOn) LogEvent(hidEvent, flag, data);
@@ -364,12 +377,14 @@ namespace TabmateRelay {
             } else {
                 sb.AppendLine("Tabmate Info: No Tabmate device found");
             }
+            sb.AppendLine($"Number of Tabmate events: {nEvents}");
+
             if (client != null) {
-                sb.AppendLine(NL + "Client Info:");
-                sb.AppendLine("Client: " + client);
-                sb.AppendLine("Client connected: " + client.Connected);
+                sb.AppendLine(NL + "Bluetooth Client Info:");
+                sb.AppendLine("Bluetooth Client: " + client);
+                sb.AppendLine("Bluetooth Client connected: " + client.Connected);
             } else {
-                sb.AppendLine(NL + "Client: None");
+                sb.AppendLine(NL + "Bluetooth Client: None");
             }
             if (device != null) {
                 sb.AppendLine(NL + "Bluetooth Device Info:");
@@ -501,9 +516,12 @@ namespace TabmateRelay {
             dialog.Show();
         }
 
-        private void OnToolsListPairedDevicesClick(object sender, EventArgs e) {
+        private void OnToolsPairedDeviceInfoClick(object sender, EventArgs e) {
             if (client == null) {
-                Utils.errMsg("The Bluetooth Client is null");
+                InitializeBluetooth();
+            }
+            if (client == null) {
+                Utils.errMsg("The Bluetooth Client could not be started");
                 return;
             }
             IEnumerable<BluetoothDeviceInfo> pairedDevices = client.PairedDevices;
@@ -518,6 +536,23 @@ namespace TabmateRelay {
                 dialog.appendTextAndNL(DeviceInfo(info));
             }
             dialog.Show();
+        }
+
+        private void OnToolsTabmateInfoClick(object sender, EventArgs e) {
+            if (client == null) {
+                InitializeBluetooth();
+            }
+            if (client == null) {
+                Utils.errMsg("The Bluetooth Client could not be started");
+                return;
+            }
+            string msg;
+            if (device == null) {
+                msg = "TABMATE not found";
+            } else {
+                msg = DeviceInfo(device);
+            }
+            Utils.infoMsg(msg);
         }
 
         private void OnToolsPickDeviceClick(object sender, EventArgs e) {
@@ -535,15 +570,6 @@ namespace TabmateRelay {
             Close();
         }
 
-        private void OnToolsConnectClick(object sender, EventArgs e) {
-            if (device != null && client != null) {
-                Thread thread = new Thread(new ThreadStart(connectClient));
-                thread.Name = "Connection Thread";
-                thread.Priority = ThreadPriority.AboveNormal;
-                thread.Start();
-            }
-        }
-
         private void OnToolsFindTabmateClick(object sender, EventArgs e) {
             Input input = FindTabmate();
             if (input == null) {
@@ -554,6 +580,7 @@ namespace TabmateRelay {
                 Utils.infoMsg(msg);
                 LogAppendTextAndNL($"{Timestamp()} {msg}");
             }
+            nEvents = 0;
         }
 
         private void OnToolsStartTabmateClick(object sender, EventArgs e) {
@@ -597,7 +624,7 @@ namespace TabmateRelay {
             Utils.infoMsg("Loaded default configuration");
         }
 
-        private void OnToolsConfigurationSpecialTestClick(object sender, EventArgs e) {
+        private void OnToolsConfigurationTestClick(object sender, EventArgs e) {
             Configuration = ConfigurationDialog.TestConfiguration();
             SaveConfigurationToSettings();
             Utils.infoMsg("Loaded test configuration");
