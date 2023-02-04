@@ -1,6 +1,9 @@
 #undef  DEBUG_EVENTS
+#undef USE_IN_THE_HAND
 
+#if USE_IN_THE_HAND
 using InTheHand.Net.Sockets;
+# endif
 using KEUtils.About;
 using KEUtils.ScrolledText;
 using KEUtils.Utils;
@@ -11,11 +14,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TabmateRelay.Properties;
 
@@ -385,6 +386,7 @@ namespace TabmateRelay {
             }
             sb.AppendLine($"Number of Tabmate events: {nEvents}");
 
+#if USE_IN_THE_HAND
             if (client != null) {
                 sb.AppendLine(NL + "Bluetooth Client Info:");
                 sb.AppendLine("Bluetooth Client: " + client);
@@ -398,6 +400,8 @@ namespace TabmateRelay {
             } else {
                 sb.AppendLine(NL + "Bluetooth Device: None");
             }
+#endif
+
 #if DEBUG_EVENTS
             sb.AppendLine($"{NL}Handle=0x{Handle.ToString("x8")}");
 #endif
@@ -459,20 +463,6 @@ namespace TabmateRelay {
             }
         }
 
-        public string FormattedMacAddress(InTheHand.Net.BluetoothAddress address) {
-            string addr = address.ToString();
-            while (addr.Length < 12) {
-                addr = "0" + addr;
-            }
-            StringBuilder mac = new StringBuilder();
-            mac.AppendFormat("{0:x2}", addr.Substring(0, 2)).Append(":");
-            mac.AppendFormat("{0:x2}", addr.Substring(2, 2)).Append(":");
-            mac.AppendFormat("{0:x2}", addr.Substring(4, 2)).Append(":");
-            mac.AppendFormat("{0:x2}", addr.Substring(6, 2)).Append(":");
-            mac.AppendFormat("{0:x2}", addr.Substring(8, 2)).Append(":");
-            mac.AppendFormat("{0:x2}", addr.Substring(10, 2));
-            return mac.ToString();
-        }
 
         protected override void WndProc(ref Message message) {
             switch (message.Msg) {
@@ -495,9 +485,12 @@ namespace TabmateRelay {
                 handler.Dispose();
                 handler = null;
             }
+
+#if USE_IN_THE_HAND
             if (client != null) {
                 client.Close();
             }
+#endif
             Application.Exit();
         }
 
@@ -527,7 +520,23 @@ namespace TabmateRelay {
             dialog.Show();
         }
 
-        private void OnToolsPairedDeviceInfoClick(object sender, EventArgs e) {
+#if USE_IN_THE_HAND
+         public string FormattedMacAddress(InTheHand.Net.BluetoothAddress address) {
+            string addr = address.ToString();
+            while (addr.Length < 12) {
+                addr = "0" + addr;
+            }
+            StringBuilder mac = new StringBuilder();
+            mac.AppendFormat("{0:x2}", addr.Substring(0, 2)).Append(":");
+            mac.AppendFormat("{0:x2}", addr.Substring(2, 2)).Append(":");
+            mac.AppendFormat("{0:x2}", addr.Substring(4, 2)).Append(":");
+            mac.AppendFormat("{0:x2}", addr.Substring(6, 2)).Append(":");
+            mac.AppendFormat("{0:x2}", addr.Substring(8, 2)).Append(":");
+            mac.AppendFormat("{0:x2}", addr.Substring(10, 2));
+            return mac.ToString();
+        }
+
+       private void OnToolsPairedDeviceInfoClick(object sender, EventArgs e) {
             if (client == null) {
                 InitializeBluetooth();
             }
@@ -569,6 +578,7 @@ namespace TabmateRelay {
         private void OnToolsPickDeviceClick(object sender, EventArgs e) {
             Task task = PickBluetoothDevice();
         }
+#endif
 
         private void OnToolsInfoClicked(object sender, EventArgs e) {
             Utils.infoMsg(Info());
@@ -580,9 +590,11 @@ namespace TabmateRelay {
                 handler.Dispose();
                 handler = null;
             }
+#if USE_IN_THE_HAND
             if (client != null) {
                 client.Close();
             }
+#endif
             Application.Exit();
         }
 

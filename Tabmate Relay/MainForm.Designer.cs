@@ -58,9 +58,6 @@ namespace TabmateRelay {
             this.findTabmateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listHIDDevicesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.pickDeviceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tabmateBluetoothInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.listDevicesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textBoxLog = new System.Windows.Forms.RichTextBox();
@@ -88,7 +85,7 @@ namespace TabmateRelay {
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1332, 49);
+            this.menuStrip1.Size = new System.Drawing.Size(1332, 52);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -99,7 +96,7 @@ namespace TabmateRelay {
             this.toolStripSeparator3,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(87, 45);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(87, 48);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // minimizeToolStripMenuItem
@@ -132,12 +129,9 @@ namespace TabmateRelay {
             this.startTabmateToolStripMenuItem,
             this.findTabmateToolStripMenuItem,
             this.listHIDDevicesToolStripMenuItem,
-            this.toolStripSeparator4,
-            this.pickDeviceToolStripMenuItem,
-            this.tabmateBluetoothInfoToolStripMenuItem,
-            this.listDevicesToolStripMenuItem});
+            this.toolStripSeparator4});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(111, 45);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(111, 48);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
             // configurationToolStripMenuItem
@@ -149,35 +143,35 @@ namespace TabmateRelay {
             this.toolStripSeparator2,
             this.specialToolStripMenuItem});
             this.configurationToolStripMenuItem.Name = "configurationToolStripMenuItem";
-            this.configurationToolStripMenuItem.Size = new System.Drawing.Size(581, 54);
+            this.configurationToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
             this.configurationToolStripMenuItem.Text = "Configuration";
             this.configurationToolStripMenuItem.Click += new System.EventHandler(this.OnToolsConfigurationEditClick);
             // 
             // editToolStripMenuItem
             // 
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(306, 54);
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
             this.editToolStripMenuItem.Text = "Edit...";
             this.editToolStripMenuItem.Click += new System.EventHandler(this.OnToolsConfigurationEditClick);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(306, 54);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
             this.openToolStripMenuItem.Text = "Open...";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.OnToolsConfigurationOpenClick);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(306, 54);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
             this.saveAsToolStripMenuItem.Text = "Save As...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.OnToolsConfigurationSaveAsClick);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(303, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(445, 6);
             // 
             // specialToolStripMenuItem
             // 
@@ -185,7 +179,7 @@ namespace TabmateRelay {
             this.defaultToolStripMenuItem,
             this.testToolStripMenuItem});
             this.specialToolStripMenuItem.Name = "specialToolStripMenuItem";
-            this.specialToolStripMenuItem.Size = new System.Drawing.Size(306, 54);
+            this.specialToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
             this.specialToolStripMenuItem.Text = "Special";
             // 
             // defaultToolStripMenuItem
@@ -215,7 +209,7 @@ namespace TabmateRelay {
             this.logActiveWindowToolStripMenuItem,
             this.logOnToolStripMenuItem});
             this.loggingToolStripMenuItem.Name = "loggingToolStripMenuItem";
-            this.loggingToolStripMenuItem.Size = new System.Drawing.Size(581, 54);
+            this.loggingToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
             this.loggingToolStripMenuItem.Text = "Logging";
             // 
             // logInputReportToolStripMenuItem
@@ -293,73 +287,52 @@ namespace TabmateRelay {
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(578, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(445, 6);
             // 
             // infoToolStripMenuItem
             // 
             this.infoToolStripMenuItem.Name = "infoToolStripMenuItem";
-            this.infoToolStripMenuItem.Size = new System.Drawing.Size(581, 54);
+            this.infoToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
             this.infoToolStripMenuItem.Text = "Info...";
             this.infoToolStripMenuItem.Click += new System.EventHandler(this.OnToolsInfoClicked);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(578, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(445, 6);
             // 
             // startTabmateToolStripMenuItem
             // 
             this.startTabmateToolStripMenuItem.Name = "startTabmateToolStripMenuItem";
-            this.startTabmateToolStripMenuItem.Size = new System.Drawing.Size(581, 54);
+            this.startTabmateToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
             this.startTabmateToolStripMenuItem.Text = "Restart Tabmate";
             this.startTabmateToolStripMenuItem.Click += new System.EventHandler(this.OnToolsStartTabmateClick);
             // 
             // findTabmateToolStripMenuItem
             // 
             this.findTabmateToolStripMenuItem.Name = "findTabmateToolStripMenuItem";
-            this.findTabmateToolStripMenuItem.Size = new System.Drawing.Size(581, 54);
+            this.findTabmateToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
             this.findTabmateToolStripMenuItem.Text = "Tabmate Info...";
             this.findTabmateToolStripMenuItem.Click += new System.EventHandler(this.OnToolsFindTabmateClick);
             // 
             // listHIDDevicesToolStripMenuItem
             // 
             this.listHIDDevicesToolStripMenuItem.Name = "listHIDDevicesToolStripMenuItem";
-            this.listHIDDevicesToolStripMenuItem.Size = new System.Drawing.Size(581, 54);
+            this.listHIDDevicesToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
             this.listHIDDevicesToolStripMenuItem.Text = "HID Device Info...";
             this.listHIDDevicesToolStripMenuItem.Click += new System.EventHandler(this.OnToolsListHIDDevicesClick);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(578, 6);
-            // 
-            // pickDeviceToolStripMenuItem
-            // 
-            this.pickDeviceToolStripMenuItem.Name = "pickDeviceToolStripMenuItem";
-            this.pickDeviceToolStripMenuItem.Size = new System.Drawing.Size(581, 54);
-            this.pickDeviceToolStripMenuItem.Text = "Pick Bluetooth Device...";
-            this.pickDeviceToolStripMenuItem.Click += new System.EventHandler(this.OnToolsPickDeviceClick);
-            // 
-            // tabmateBluetoothInfoToolStripMenuItem
-            // 
-            this.tabmateBluetoothInfoToolStripMenuItem.Name = "tabmateBluetoothInfoToolStripMenuItem";
-            this.tabmateBluetoothInfoToolStripMenuItem.Size = new System.Drawing.Size(581, 54);
-            this.tabmateBluetoothInfoToolStripMenuItem.Text = "Paired TABMATE Info...";
-            this.tabmateBluetoothInfoToolStripMenuItem.Click += new System.EventHandler(this.OnToolsTabmateInfoClick);
-            // 
-            // listDevicesToolStripMenuItem
-            // 
-            this.listDevicesToolStripMenuItem.Name = "listDevicesToolStripMenuItem";
-            this.listDevicesToolStripMenuItem.Size = new System.Drawing.Size(581, 54);
-            this.listDevicesToolStripMenuItem.Text = "Paired Bluetooth Device Info...";
-            this.listDevicesToolStripMenuItem.Click += new System.EventHandler(this.OnToolsPairedDeviceInfoClick);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(445, 6);
             // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(104, 45);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(104, 48);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // aboutToolStripMenuItem
@@ -372,10 +345,10 @@ namespace TabmateRelay {
             // textBoxLog
             // 
             this.textBoxLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxLog.Location = new System.Drawing.Point(3, 51);
+            this.textBoxLog.Location = new System.Drawing.Point(3, 54);
             this.textBoxLog.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBoxLog.Name = "textBoxLog";
-            this.textBoxLog.Size = new System.Drawing.Size(1326, 857);
+            this.textBoxLog.Size = new System.Drawing.Size(1326, 854);
             this.textBoxLog.TabIndex = 4;
             this.textBoxLog.Text = "";
             this.textBoxLog.Enter += new System.EventHandler(this.OnControlEnter);
@@ -460,20 +433,20 @@ namespace TabmateRelay {
             this.toolStripMenuItemMaximize,
             this.toolStripMenuItemQuit});
             this.contextMenuStripNotifyIcon.Name = "contextMenuStripNotifyIcon";
-            this.contextMenuStripNotifyIcon.Size = new System.Drawing.Size(361, 155);
+            this.contextMenuStripNotifyIcon.Size = new System.Drawing.Size(223, 100);
             this.contextMenuStripNotifyIcon.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripNotifyIcon_Opening);
             // 
             // toolStripMenuItemMaximize
             // 
             this.toolStripMenuItemMaximize.Name = "toolStripMenuItemMaximize";
-            this.toolStripMenuItemMaximize.Size = new System.Drawing.Size(360, 48);
+            this.toolStripMenuItemMaximize.Size = new System.Drawing.Size(222, 48);
             this.toolStripMenuItemMaximize.Text = "Maximize";
             this.toolStripMenuItemMaximize.Click += new System.EventHandler(this.OnNotifyIconMaximizeClick);
             // 
             // toolStripMenuItemQuit
             // 
             this.toolStripMenuItemQuit.Name = "toolStripMenuItemQuit";
-            this.toolStripMenuItemQuit.Size = new System.Drawing.Size(360, 48);
+            this.toolStripMenuItemQuit.Size = new System.Drawing.Size(222, 48);
             this.toolStripMenuItemQuit.Text = "Quit";
             this.toolStripMenuItemQuit.Click += new System.EventHandler(this.OnFileExitClick);
             // 
@@ -510,8 +483,6 @@ namespace TabmateRelay {
         private ToolStripMenuItem helpToolStripMenuItem;
         private ToolStripMenuItem exitToolStripMenuItem;
         private ToolStripMenuItem aboutToolStripMenuItem;
-        private ToolStripMenuItem listDevicesToolStripMenuItem;
-        private ToolStripMenuItem pickDeviceToolStripMenuItem;
         private ToolStripMenuItem infoToolStripMenuItem;
         private ToolStripMenuItem listHIDDevicesToolStripMenuItem;
         private ToolStripMenuItem findTabmateToolStripMenuItem;
@@ -542,7 +513,6 @@ namespace TabmateRelay {
         private ToolStripMenuItem logOnToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator5;
         private ToolStripSeparator toolStripSeparator4;
-        private ToolStripMenuItem tabmateBluetoothInfoToolStripMenuItem;
         private NotifyIcon notifyIcon;
         private ToolStripMenuItem minimizeToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator3;
