@@ -25,9 +25,12 @@ namespace TabmateRelay {
         ///  the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.minimizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.configurationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -65,13 +68,19 @@ namespace TabmateRelay {
             this.buttonClear = new System.Windows.Forms.Button();
             this.buttonQuit = new System.Windows.Forms.Button();
             this.tableLayoutPanelTop = new System.Windows.Forms.TableLayoutPanel();
+            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.contextMenuStripNotifyIcon = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemMaximize = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemQuit = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.flowLayoutPanelButtons.SuspendLayout();
             this.tableLayoutPanelTop.SuspendLayout();
+            this.contextMenuStripNotifyIcon.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
             // 
+            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(40, 40);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
@@ -79,22 +88,36 @@ namespace TabmateRelay {
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1332, 49);
+            this.menuStrip1.Size = new System.Drawing.Size(1332, 52);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.minimizeToolStripMenuItem,
+            this.toolStripSeparator3,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(87, 45);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(87, 48);
             this.fileToolStripMenuItem.Text = "File";
+            // 
+            // minimizeToolStripMenuItem
+            // 
+            this.minimizeToolStripMenuItem.Name = "minimizeToolStripMenuItem";
+            this.minimizeToolStripMenuItem.Size = new System.Drawing.Size(451, 54);
+            this.minimizeToolStripMenuItem.Text = "Send to System Tray";
+            this.minimizeToolStripMenuItem.Click += new System.EventHandler(this.OnFileMinimizeClick);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(448, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(230, 54);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(451, 54);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.OnFileExitClick);
             // 
@@ -114,7 +137,7 @@ namespace TabmateRelay {
             this.tabmateBluetoothInfoToolStripMenuItem,
             this.listDevicesToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(111, 45);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(111, 48);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
             // configurationToolStripMenuItem
@@ -336,7 +359,7 @@ namespace TabmateRelay {
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(104, 45);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(104, 48);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // aboutToolStripMenuItem
@@ -349,10 +372,10 @@ namespace TabmateRelay {
             // textBoxLog
             // 
             this.textBoxLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxLog.Location = new System.Drawing.Point(3, 51);
+            this.textBoxLog.Location = new System.Drawing.Point(3, 54);
             this.textBoxLog.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBoxLog.Name = "textBoxLog";
-            this.textBoxLog.Size = new System.Drawing.Size(1326, 857);
+            this.textBoxLog.Size = new System.Drawing.Size(1326, 854);
             this.textBoxLog.TabIndex = 4;
             this.textBoxLog.Text = "";
             this.textBoxLog.Enter += new System.EventHandler(this.OnControlEnter);
@@ -419,6 +442,40 @@ namespace TabmateRelay {
             this.tableLayoutPanelTop.Size = new System.Drawing.Size(1329, 960);
             this.tableLayoutPanelTop.TabIndex = 6;
             // 
+            // notifyIcon
+            // 
+            this.notifyIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.notifyIcon.BalloonTipText = "Double ckick on the icon to open Tabmate Relay or right-click on the icon for mor" +
+    "e options.";
+            this.notifyIcon.BalloonTipTitle = "Tabmate Relay";
+            this.notifyIcon.ContextMenuStrip = this.contextMenuStripNotifyIcon;
+            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
+            this.notifyIcon.Text = "Tabmate Relay";
+            this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.OnNotifyIconDoubleClick);
+            // 
+            // contextMenuStripNotifyIcon
+            // 
+            this.contextMenuStripNotifyIcon.ImageScalingSize = new System.Drawing.Size(40, 40);
+            this.contextMenuStripNotifyIcon.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemMaximize,
+            this.toolStripMenuItemQuit});
+            this.contextMenuStripNotifyIcon.Name = "contextMenuStripNotifyIcon";
+            this.contextMenuStripNotifyIcon.Size = new System.Drawing.Size(223, 100);
+            // 
+            // toolStripMenuItemMaximize
+            // 
+            this.toolStripMenuItemMaximize.Name = "toolStripMenuItemMaximize";
+            this.toolStripMenuItemMaximize.Size = new System.Drawing.Size(222, 48);
+            this.toolStripMenuItemMaximize.Text = "Maximize";
+            this.toolStripMenuItemMaximize.Click += new System.EventHandler(this.OnNotifyIconMaximizeClick);
+            // 
+            // toolStripMenuItemQuit
+            // 
+            this.toolStripMenuItemQuit.Name = "toolStripMenuItemQuit";
+            this.toolStripMenuItemQuit.Size = new System.Drawing.Size(222, 48);
+            this.toolStripMenuItemQuit.Text = "Quit";
+            this.toolStripMenuItemQuit.Click += new System.EventHandler(this.OnFileExitClick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 31F);
@@ -438,6 +495,7 @@ namespace TabmateRelay {
             this.flowLayoutPanelButtons.PerformLayout();
             this.tableLayoutPanelTop.ResumeLayout(false);
             this.tableLayoutPanelTop.PerformLayout();
+            this.contextMenuStripNotifyIcon.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -484,5 +542,11 @@ namespace TabmateRelay {
         private ToolStripSeparator toolStripSeparator5;
         private ToolStripSeparator toolStripSeparator4;
         private ToolStripMenuItem tabmateBluetoothInfoToolStripMenuItem;
+        private NotifyIcon notifyIcon;
+        private ToolStripMenuItem minimizeToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator3;
+        private ContextMenuStrip contextMenuStripNotifyIcon;
+        private ToolStripMenuItem toolStripMenuItemMaximize;
+        private ToolStripMenuItem toolStripMenuItemQuit;
     }
 }

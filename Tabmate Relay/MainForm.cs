@@ -1,3 +1,4 @@
+#undef  DEBUG_EVENTS
 
 using InTheHand.Net.Sockets;
 using KEUtils.About;
@@ -8,15 +9,14 @@ using SharpLib.Hid.Device;
 using SharpLib.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Interop;
 using TabmateRelay.Properties;
 
 namespace TabmateRelay {
@@ -55,7 +55,16 @@ namespace TabmateRelay {
         public KeyDef[] Configuration { get; set; }
 
         public MainForm() {
+            Debug.WriteLine("MainForm CTOR");
+
             InitializeComponent();
+
+            // Make the icon show in the System Tray
+            notifyIcon.Visible = true;
+            notifyIcon.ShowBalloonTip(1000);
+
+            //// Make it start as Normal
+            //OnNotifyIconMaximizeClick(null, null);
 
             // Get configuration
             GetConfigurationFromSettings();
@@ -392,6 +401,9 @@ namespace TabmateRelay {
             } else {
                 sb.AppendLine(NL + "Bluetooth Device: None");
             }
+#if DEBUG_EVENTS
+            sb.AppendLine($"{NL}Handle=0x{Handle.ToString("x8")}");
+#endif
             return sb.ToString();
         }
 
@@ -481,6 +493,7 @@ namespace TabmateRelay {
         }
 
         private void OnFormClosing(object sender, FormClosingEventArgs e) {
+            Debug.WriteLine("OnFormClosing");
             if (handler != null) {
                 handler.Dispose();
                 handler = null;
@@ -488,6 +501,7 @@ namespace TabmateRelay {
             if (client != null) {
                 client.Close();
             }
+            Application.Exit();
         }
 
         private void OnControlEnter(object sender, EventArgs e) {
@@ -564,10 +578,15 @@ namespace TabmateRelay {
         }
 
         private void OnFileExitClick(object sender, EventArgs e) {
+            Debug.WriteLine("OnFileExitClick");
+            if (handler != null) {
+                handler.Dispose();
+                handler = null;
+            }
             if (client != null) {
                 client.Close();
             }
-            Close();
+            Application.Exit();
         }
 
         private void OnToolsFindTabmateClick(object sender, EventArgs e) {
@@ -713,6 +732,53 @@ namespace TabmateRelay {
                 Settings.Default.LogActiveWindow = logActiveWindow;
                 Settings.Default.Save();
             }
+        }
+
+        private void OnFormResize(object sender, EventArgs e) {
+#if DEBUG_EVENTS
+            Debug.WriteLine("OnFormResize");
+#endif
+
+            //if (WindowState == FormWindowState.Minimized) {
+            //    LogAppendTextAndNL($"{Timestamp()} OnFormResize" +
+            //        $" Handle=0x{Handle.ToString("x8")}");
+            //    Visible = true;
+            //    ShowInTaskbar = false;
+            //    notifyIcon.Visible = true;
+            //    notifyIcon.ShowBalloonTip(1000);
+            //}
+        }
+
+        private void OnFileMinimizeClick(object sender, EventArgs e) {
+#if DEBUG_EVENTS
+            Debug.WriteLine("OnFileMinimizeClick");
+            LogAppendTextAndNL($"{Timestamp()} OnFileMinimizeClick" +
+                $" Handle=0x{Handle.ToString("x8")}");
+#endif
+            Hide();
+        }
+
+        private void OnNotifyIconDoubleClick(object sender, MouseEventArgs e) {
+#if DEBUG_EVENTS
+            Debug.WriteLine("OnNotifyIconDoubleClick");
+            LogAppendTextAndNL($"{Timestamp()} OnNotifyIconDoubleClick" +
+                $" Handle=0x{Handle.ToString("x8")}");
+#endif
+            OnNotifyIconMaximizeClick(sender, e);
+        }
+
+        private void OnNotifyIconMaximizeClick(object sender, EventArgs e) {
+#if DEBUG_EVENTS
+            Debug.WriteLine("OnNotifyIconMaximizeClick");
+            LogAppendTextAndNL($"{Timestamp()} OnNotifyIconMaximizeClick" +
+                $" Handle=0x{Handle.ToString("x8")}");
+#endif
+            Show();
+            if (!ShowInTaskbar)
+                ShowInTaskbar = true;
+
+            if (WindowState == FormWindowState.Minimized)
+                WindowState = FormWindowState.Normal;
         }
     }
 
