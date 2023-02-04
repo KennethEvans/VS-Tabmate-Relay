@@ -88,7 +88,7 @@ namespace TabmateRelay {
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1332, 52);
+            this.menuStrip1.Size = new System.Drawing.Size(1332, 49);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -99,7 +99,7 @@ namespace TabmateRelay {
             this.toolStripSeparator3,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(87, 48);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(87, 45);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // minimizeToolStripMenuItem
@@ -137,7 +137,7 @@ namespace TabmateRelay {
             this.tabmateBluetoothInfoToolStripMenuItem,
             this.listDevicesToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(111, 48);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(111, 45);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
             // configurationToolStripMenuItem
@@ -359,7 +359,7 @@ namespace TabmateRelay {
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(104, 48);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(104, 45);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // aboutToolStripMenuItem
@@ -372,10 +372,10 @@ namespace TabmateRelay {
             // textBoxLog
             // 
             this.textBoxLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxLog.Location = new System.Drawing.Point(3, 54);
+            this.textBoxLog.Location = new System.Drawing.Point(3, 51);
             this.textBoxLog.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBoxLog.Name = "textBoxLog";
-            this.textBoxLog.Size = new System.Drawing.Size(1326, 854);
+            this.textBoxLog.Size = new System.Drawing.Size(1326, 857);
             this.textBoxLog.TabIndex = 4;
             this.textBoxLog.Text = "";
             this.textBoxLog.Enter += new System.EventHandler(this.OnControlEnter);
@@ -460,19 +460,20 @@ namespace TabmateRelay {
             this.toolStripMenuItemMaximize,
             this.toolStripMenuItemQuit});
             this.contextMenuStripNotifyIcon.Name = "contextMenuStripNotifyIcon";
-            this.contextMenuStripNotifyIcon.Size = new System.Drawing.Size(223, 100);
+            this.contextMenuStripNotifyIcon.Size = new System.Drawing.Size(361, 155);
+            this.contextMenuStripNotifyIcon.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripNotifyIcon_Opening);
             // 
             // toolStripMenuItemMaximize
             // 
             this.toolStripMenuItemMaximize.Name = "toolStripMenuItemMaximize";
-            this.toolStripMenuItemMaximize.Size = new System.Drawing.Size(222, 48);
+            this.toolStripMenuItemMaximize.Size = new System.Drawing.Size(360, 48);
             this.toolStripMenuItemMaximize.Text = "Maximize";
             this.toolStripMenuItemMaximize.Click += new System.EventHandler(this.OnNotifyIconMaximizeClick);
             // 
             // toolStripMenuItemQuit
             // 
             this.toolStripMenuItemQuit.Name = "toolStripMenuItemQuit";
-            this.toolStripMenuItemQuit.Size = new System.Drawing.Size(222, 48);
+            this.toolStripMenuItemQuit.Size = new System.Drawing.Size(360, 48);
             this.toolStripMenuItemQuit.Text = "Quit";
             this.toolStripMenuItemQuit.Click += new System.EventHandler(this.OnFileExitClick);
             // 

@@ -63,9 +63,6 @@ namespace TabmateRelay {
             notifyIcon.Visible = true;
             notifyIcon.ShowBalloonTip(1000);
 
-            //// Make it start as Normal
-            //OnNotifyIconMaximizeClick(null, null);
-
             // Get configuration
             GetConfigurationFromSettings();
             //// Set to default configuration
@@ -779,6 +776,10 @@ namespace TabmateRelay {
 
             if (WindowState == FormWindowState.Minimized)
                 WindowState = FormWindowState.Normal;
+        }
+
+        private void contextMenuStripNotifyIcon_Opening(object sender, System.ComponentModel.CancelEventArgs e) {
+
         }
     }
 
