@@ -1,7 +1,7 @@
 # Tabmate Relay
 
 Celsys, the makers of Clip Studio Paint (CSP) also make a device called the Tabmate, which is a hand-held control with buttons, a wheel, and a control pad. The Tabmate makes it much easier to work with the program when you use it on a tablet, like the Surface Book, with the keyboard out of the way. The problem is that it only works with CSP. 
- (See https://www.clipstudio.net/en/ and https://www.clipstudio.net/)
+ (See https://www.clipstudio.net/en/ and https://www.clipstudio.net/promotion/tabmate/en/)
 
 Tabmate Relay, is a C# Windows application designed to talk to the Tabmate and translate the button presses into key combinations that can be received by whatever application is in focus at the time (the Active Window). You configure in Tabmate Relay what sequences you want to be associated with which button press. The other program could be any program, not necessarily an art application.
 
