@@ -5,6 +5,7 @@
 using InTheHand.Net.Sockets;
 # endif
 using KEUtils.About;
+using KEUtils.ScrolledHTML;
 using KEUtils.ScrolledText;
 using KEUtils.Utils;
 using Newtonsoft.Json;
@@ -40,6 +41,9 @@ namespace TabmateRelay {
         int eventCount;
         const int MAX_EVENTS_PER_PERIOD = 10;
         const int PERIOD_DURATION_MS = 500;
+
+        private static ScrolledHTMLDialog overviewDlg;
+
 
         private bool logOn = true;
         private bool logInputReport = false;
@@ -376,7 +380,8 @@ namespace TabmateRelay {
 
         public string Info() {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("Information" + NL);
+
+            sb.AppendLine($"Number of Tabmate events: {nEvents}{NL}");
             Input tabmateDevice = FindTabmate();
             if (tabmateDevice != null) {
                 sb.AppendLine("Tabmate Info:");
@@ -384,7 +389,7 @@ namespace TabmateRelay {
             } else {
                 sb.AppendLine("Tabmate Info: No Tabmate device found");
             }
-            sb.AppendLine($"Number of Tabmate events: {nEvents}");
+ 
 
 #if USE_IN_THE_HAND
             if (client != null) {
@@ -509,6 +514,27 @@ namespace TabmateRelay {
             }
             AboutBox dlg = new AboutBox(image, assembly);
             dlg.ShowDialog();
+        }
+
+        private void OnOverviewClick(object sender, EventArgs e) {
+            // Create, show, or set visible the overview dialog as appropriate
+            if (overviewDlg == null) {
+                MainForm app = (MainForm)FindForm().FindForm();
+                overviewDlg = new ScrolledHTMLDialog(
+                    Utils.getDpiAdjustedSize(app, new Size(800, 600)),
+                    "Overview", @"Help\Overview.html");
+                overviewDlg.Show();
+            } else {
+                overviewDlg.Visible = true;
+            }
+        }
+
+        private void OnOverviewOnlineClick(object sender, EventArgs e) {
+            try {
+                Process.Start("https://kenevans.net/opensource/TabmateRelay/Help/Overview.html");
+            } catch (Exception ex) {
+                Utils.excMsg("Failed to start browser", ex);
+            }
         }
 
         private void OnToolsListHIDDevicesClick(object sender, EventArgs e) {

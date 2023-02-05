@@ -69,6 +69,8 @@ namespace TabmateRelay {
             this.contextMenuStripNotifyIcon = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemMaximize = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemQuit = new System.Windows.Forms.ToolStripMenuItem();
+            this.overviewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.overviewOnlineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.flowLayoutPanelButtons.SuspendLayout();
             this.tableLayoutPanelTop.SuspendLayout();
@@ -77,7 +79,6 @@ namespace TabmateRelay {
             // 
             // menuStrip1
             // 
-            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(40, 40);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
@@ -330,6 +331,8 @@ namespace TabmateRelay {
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.overviewToolStripMenuItem,
+            this.overviewOnlineToolStripMenuItem,
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(104, 48);
@@ -450,6 +453,20 @@ namespace TabmateRelay {
             this.toolStripMenuItemQuit.Text = "Quit";
             this.toolStripMenuItemQuit.Click += new System.EventHandler(this.OnFileExitClick);
             // 
+            // overviewToolStripMenuItem
+            // 
+            this.overviewToolStripMenuItem.Name = "overviewToolStripMenuItem";
+            this.overviewToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
+            this.overviewToolStripMenuItem.Text = "Overview...";
+            this.overviewToolStripMenuItem.Click += new System.EventHandler(this.OnOverviewClick);
+            // 
+            // overviewOnlineToolStripMenuItem
+            // 
+            this.overviewOnlineToolStripMenuItem.Name = "overviewOnlineToolStripMenuItem";
+            this.overviewOnlineToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
+            this.overviewOnlineToolStripMenuItem.Text = "Overview Online...";
+            this.overviewOnlineToolStripMenuItem.Click += new System.EventHandler(this.OnOverviewOnlineClick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 31F);
@@ -519,5 +536,7 @@ namespace TabmateRelay {
         private ContextMenuStrip contextMenuStripNotifyIcon;
         private ToolStripMenuItem toolStripMenuItemMaximize;
         private ToolStripMenuItem toolStripMenuItemQuit;
+        private ToolStripMenuItem overviewToolStripMenuItem;
+        private ToolStripMenuItem overviewOnlineToolStripMenuItem;
     }
 }

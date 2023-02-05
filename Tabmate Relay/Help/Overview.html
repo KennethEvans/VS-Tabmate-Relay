@@ -1,0 +1,247 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link href="book.css" rel="stylesheet" type="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Tabmate Relay</title>
+</head>
+<body link="#000080" vlink="#800000" dir="ltr" lang="en-US" xml:lang="en-US">
+<h1 align="center"><strong><img src="Tabmate Relay.png" alt="Logo" width="96" height="96" align="middle" /> Tabmate Relay Overview</strong></h1>
+<p align="left">The <a href="https://www.clipstudio.net/promotion/tabmate/en/">Tabmate</a> is a Bluetooth, hand-held device with 60 buttons in 4 groups that was designed to be used with <a href="https://www.clipstudio.net/en/">Clip Studio Paint (CSP)</a>, a drawing and illustration application. There are 15 physical buttons plus the  Celsys button on the bottom which functions as On / Off and also changes the group. Applications such as CSP typically rely on a large number of keystroke combinations to do various things. &quot;]&quot;, for example, is commonly used for &quot;Increase Brush Size, &quot;Ctrl-Z&quot; for undo. For those who work with touch-sensitive tablets like a Surface Book with the keyboard out of the way, this becomes an issue. The Tabmate goes a long way toward solving that problem, as you can associate the Tabmate buttons with keystroke combinations through a menu item in CSP so that pushing the button causes the desired action to happen. The Tabmate was designed to work with CSP and does that well. It could just as well be used with other programs, Photoshop, for example, but there is no interface to it in those programs.</p>
+<p align="left">Tabmate Relay is a C# Windows application designed to talk to the Tabmate and translate the button presses into key combinations that can be received by whatever application is in focus at the time (the Active Window). You configure in Tabmate Relay what sequences you want to be associated with which button press. The other program could be any program, not necessarily an art application.</p>
+<p>The developer of Tabmate Relay is not associated with <a href="https://www.celsys.com/en/">Celsys</a>, its seller, nor CSP. There is also another application by this developer, <a href="https://kenevans.net/opensource/ArtPad/Help/Overview.html">ArtPad</a>,  which is a small keypad  that stays on top of your application and allows you to enter these sequences by tapping on one of its keys. It can be used along with the Tabmate. </p>
+<h3>The Interface</h3>
+<p>This is a screen shot of the Tabmate Relay main interface. It consists of menu items and an area for logging information. The amount and detail of the logging is configurable. </p>
+<p align="center"><img src="Tabmate Screenshot.png" alt="Tabmate Relay Main Window" width="50%"  /></p>
+The other main window is the interface for configuring what each button does.
+<p align="center"><img src="Tabmate Configuration Screenshot.png" alt="Tabmate Relay Main Window" width="80%"  /></p>
+<p align="left">Configurations can be stored as CSV files and loaded as needed. Note that the groups are denoted by the LED at the top, Solid Red, Solid Blue, Flash Red, and Flash Blue. Flashing Red and Blue indicates pairing mode., </p>
+<p align="left">The application is designed to be in the System Tray, also known as the Notification Area, when in use. Double-clicking the icon in the System Tray maximizes it to the desktop. There is also a right-click context menu item on the icon that will  <strong>Maximize</strong> or <strong>Quit</strong> it. It can be made to be started at system start up. There is a command-line option, -showOnStartup, that will set it to come up maximized when it is started. This can be abbreviated as -s, -S, /s, or /S. The default is to come up in the System Tray. </p>
+<h3>KeyString</h3>
+<p>Tabmate Relay  uses SendKeys from the .Net Framework.  Each sequence is represented by one or more characters. To send a single character (except for special characters) just enter the character. For the special characters +, ^, %, and ~, use {+}, { ^}, {%}, and {~}. For the special characters (, ), {, }, [, and ] enclose them in braces. </p>
+<p>Here are some of the more commonly-used  keys that are special or are not characters:</p>
+<table width="50%" border="0">
+  <tr>
+    <td><strong>Key</strong></td>
+    <td><strong>Code</strong></td>
+  </tr>
+  <tr>
+    <td>^</td>
+    <td>Ctrl</td>
+  </tr>
+  <tr>
+    <td>+</td>
+    <td>Shift</td>
+  </tr>
+  <tr>
+    <td>%</td>
+    <td>Alt</td>
+  </tr>
+  <tr>
+    <td>~</td>
+    <td>Enter</td>
+  </tr>
+  <tr>
+    <td>{</td>
+    <td> {{
+      } (Similar for }) </td>
+  </tr>
+  <tr>
+    <td>(</td>
+    <td>{(} (Similar for )) </td>
+  </tr>
+  <tr>
+    <td>INS or INSERT</td>
+    <td>{INSERT} or {INS}</td>
+  </tr>
+  <tr>
+    <td>DEL or DELETE</td>
+    <td>{DELETE} or {DEL}</td>
+  </tr>
+  <tr>
+    <td>BACKSPACE</td>
+    <td>{BS} or {BKSP} or {BACKSPACE}</td>
+  </tr>
+  <tr>
+    <td>DOWN ARROW</td>
+    <td>{DOWN} (Similar for UP, LEFT, RIGHT)</td>
+  </tr>
+  <tr>
+    <td>END</td>
+    <td>{END} (Similar for HOME) </td>
+  </tr>
+  <tr>
+    <td>ESC</td>
+    <td>{ESC}</td>
+  </tr>
+  <tr>
+    <td>TAB</td>
+    <td>{TAB}</td>
+  </tr>
+  <tr>
+    <td>F1</td>
+    <td>{F1} (Similar for other function keys) </td>
+  </tr>
+  <tr>
+    <td>Keypad add</td>
+    <td>{ADD} (Similar for subtract, multiply, divide) </td>
+  </tr>
+  <tr>
+    <td>PAGE DOWN</td>
+    <td>{PGDN} (Similar for PAGE UP) </td>
+  </tr>
+  <tr>
+    <td>NUMLOCK</td>
+    <td>{NUMLOCK}</td>
+  </tr>
+</table>
+<p>Here are some examples:</p>
+<table width="40%" border="0">
+  <tr>
+    <td>Ctrl-C</td>
+    <td>^c</td>
+  </tr>
+  <tr>
+    <td>Alt-C</td>
+    <td>%c</td>
+  </tr>
+  <tr>
+    <td>Shift-Ctrl-S</td>
+    <td>^S</td>
+  </tr>
+  <tr>
+    <td>Ctrl-E, Ctrl-C </td>
+    <td>^(ec) or ^e^c </td>
+  </tr>
+  <tr>
+    <td>Shift-E, Shift-C </td>
+    <td>EC or +(EC) or +E+C or +e+c </td>
+  </tr>
+  <tr>
+    <td>Shift-E, C </td>
+    <td>+EC</td>
+  </tr>
+  <tr>
+    <td>A</td>
+    <td>A or +a or +A</td>
+  </tr>
+  <tr>
+    <td>Press h 10 times </td>
+    <td>{h 10} </td>
+  </tr>
+  <tr>
+    <td>Press LEFT ARROW 5 times </td>
+    <td>{LEFT 5} </td>
+  </tr>
+  <tr>
+    <td>Lorem Ipsum 2</td>
+    <td>Lorem Ipsum 2</td>
+  </tr>
+</table>
+<p>For a complete list of the syntax see <a href="https://msdn.microsoft.com/en-us/library/syhttps://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.sendkeys.send">https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.sendkeys.send</a> or search for SendKeys. </p>
+<h3>TYPE</h3>
+<p><strong>NORMAL</strong></p>
+<p>This indicates that the key sends a normal key sequence with the KeyString as described above. </p>
+<p><strong>HOLD</strong></p>
+<p>This indicates that the key may be held down after it is sent. It is considered to be a single key on the keyboard. The KeyString syntax is different from the other keys. It  may be one of ^,  %, and +, representing Ctrl, Alt, and Shift. Other values are treated as being names of keys defined at <a href="https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.keys">https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.keys</a>. Individual keys, such as A, B, C... are represented by A, B, C... (in upper case). For example, in many art programs holding down E temporarily invokes the eraser. E works as a hold key for Tabmate Relay. This covers many keys on the keyboard, but not all of them. </p>
+<p>Strange behavior can occur if the  keys  Ctrl, Alt, or Shift are left in the hold state or were put in the hold state when the wrong application was the active window or when the active application changed while the buttons were held. Actions in other programs or even the desktop behave as if these keys are held, which usually means they do something different than without them held. In case of trouble it may work to press the physical key on the keyboard twice or to press both physical keys on the keyboard together. In the worst case, you many have to log off and back on or restart. Being careful about holding keys down is the best approach.</p>
+<p><strong>COMMAND</strong></p>
+<p>This indicates that instead of sending keys, a command is run. The KeyString is the path to the command. If the command is in your PATH, then entering the name of the command is sufficient. Otherwise the full path must be specified.</p>
+<p>You can optionally type a comma after the command followed by options for the command. You should be able to use whatever you can use at a command prompt (except for the comma notation). </p>
+<p><strong><em>Onscreen Keyboards</em></strong></p>
+<p>There are two onscreen keyboards you may want to consider.</p>
+<p>TabTip is the tablet keypad. In some applications it will come up automatically when you need to enter text, such as a file name for saving. Other applications don't support this feature, so you need a keypad. You can start TabTip with the following:</p>
+<pre>\Program Files\Common Files\Microsoft Shared\ink\TabTip.exe
+</pre>
+<p>OSK is another onscreen keyboard that has come with Windows for some time. On 64-bit Windows 10, you should be able to use:</p>
+<pre>\windows\system32\osk.exe</pre>
+<p>Whether you can use just osk.exe and whether it works at all depends on the version of Windows and on whether it is a 64-bit or 32-bit platform. You may have to experiment. Note that Tabmate Relay runs as 64-bit on 64-bit systems and 32-bit on 32-bit systems. </p>
+<p><strong>UNUSED</strong></p>
+<p>This indicates you don't want to use this key for now. There will be no label, and the configuration will be retained but ignored. </p>
+<h3>File Menu </h3>
+<blockquote>
+  <h3>Send to System Tray </h3>
+  <p>Minimizes Tabmate Relay to the System Tray. </p>
+  <h3>Exit</h3>
+  <p>Exits the application. This can also be done via the notify icon. </p>
+</blockquote>
+<h3>Tools Menu </h3>
+
+<blockquote>
+  <h3>Configuration</h3>
+  <h3><em>Edit</em></h3>
+  <p>Brings up the Configuration shown above. There are buttons to <strong>Reset</strong> to the configuration when you started the dialog, <strong>Cancel</strong>, and <strong>OK</strong>. When selecting <strong>OK</strong>, the configuration is then the one in use by Tabmate Relay. It is stored for the next time Tabmate Relay is started. </p>
+  <h3><em>Open</em></h3>
+  <p>Brings up a dialog to to open a CSV file, which determines the current configuration. The configuration is then stored for use next time. The CSV file is tab-delimited, not comma-delimited, so you can have commas in your configuration. You cannot have TABs. You may have to save it with extension .tsv to use it in some spreadsheets, but most also accept TAB as the separator. There is a header and 60 lines with columns, <strong>Button,	Page,	Number,	Name,	Label,	KeyString,	</strong>and <strong>Type</strong>.<strong> Page </strong>is which of the 4 groups (0 - 3), and number is the button number (0 - 59). You can edit the file and reopen it in Tabmate Relay. There will be issues if you do not use the proper syntax. </p>
+  <h3><em>Save As</em></h3>
+  <p>Brings up a dialog that let you save the current configuration as a CSV file. </p>
+  <h3><em> Special </em></h3>
+  <p>Allows you to load some default configurations, Default and Test. Default is what is loaded if you have never used the program. All keys are marked as UNUSED. </p>
+  <h3>Logging</h3>
+  <p>These control what is logged and if logging is enabled at all. Only the items specified will appear. The full format is:</p>
+  <pre>hh:mm:sec AM/PM xxxxxxxxxxxxxxxxxx up/down/other Flag: xxxxxxxxxxxxxxxx {[number &lt;button name:button Label &gt; % type(up / down)]} active window title</pre>
+  The Input report is a hex byte sequence
+  in Little Endian order. The first two bytes are 0504. The author does not know what these represent. The flag is a hex number representing the rest of the byte sequence. The lowest order position corresponds to the first button.
+  <h3><em>Log Input Report</em></h3>
+  <p>Displays the bytes coming from the Tabmate and some other information. The bytes are in Little Endian order </p>
+  <h3><em>Log Flag</em></h3>
+  <p>The bytes can be converted to a 64-but flag, which shows which of the 60 buttons are pressed. </p>
+  <h3><em>Log Index</em></h3>
+  <p>This is the button number (0 - 59). </p>
+  <h3><em>Log Type</em></h3>
+  <p>The Type, N, H, C, or U for the types described above. </p>
+  <h3><em>Log Label</em></h3>
+  <p>The label you have given for the action to be performed.  </p>
+  <h3><em>Log Key String</em></h3>
+  <p>The key string to be sent. </p>
+  <h3><em>Log Name</em></h3>
+  <p>The name of the Button (Button +, Button A, Wheel Up, etc.). The names are not configurable. The Labels are. </p>
+  <h3><em>Log Active Window</em></h3>
+  <p>Shows the title of the active window. </p>
+  <h3><em>Logging On</em></h3>
+  <p>Switch to turn logging on or off entirely. Error messages should still be shown. </p>
+  <h3>Info</h3>
+  <p>Number of events, device information about the Tabmate, and possibly other information. </p>
+  <h3>Restart Tabmate</h3>
+  <p>Searches for the Tabmate. Note that the Tabmate does not have to be found, on, or connected when Tabmate Relay starts. Its device properties are known, and Tabmate Relay will start receiving data when it becomes available. The Tabmate does have to be paired. If it is not found when it is turned on, it is likely a pairing problem. It only accepts a connection to one computer at a time. If it was connected to another computer and that computer is on and in range, it will not connect to another one. It may not connect, even when the other one is off, and it may not connect to the current computer, even though it is listed as paired. The solution in this case may be to un-pair, then re-pair it. This menu item may help resolve these sorts of problem. If it is paired and turned on, it <em>should</em> be found. </p>
+  <p>Also note Tabmate Relay has only been tested with one Tabmate device. It is possible the device properties and other things may change with different versions. Also note that it is listed as a Broadcom Bluetooth Wireless  Keyboard, not TABMATE. It is listed the same way in Device Explorer and there are also other devices with the same name. Only one is the joystick. When pairing it will appear as TABMATE. </p>
+  <h3>Tabmate Info</h3>
+  <p>Gives technical information about the Tabmate if it is found. </p>
+  <p><strong>HID Device Info</strong></p>
+  <p>List all the Human Interface Devices found.         </p>
+  <h3>Help Menu </h3>
+</blockquote>
+<blockquote>
+  <h3><strong>Overview</strong></h3>
+  <p>Brings up a window with this HTML file. It works as a rudimentary browser with links and Back and Forward buttons.</p>
+  <h3>Overview Online</h3>
+  <p>Access the Tabmate Relay online help.  </p>
+  <h3>About</h3>
+  <p>Gives information about this application including the version. </p>
+</blockquote>
+<h3>Installation</h3>
+<p>If you are installing from a download, just unzip the files into a directory somewhere convenient. Then run it from there. If you are installing from a build, copy these files and directories from the bin/Release/net48 directory to a convenient directory.</p>
+<ul>
+  <li>Newtonsoft.Json.dll</li>
+  <li>SharpLib.Hid.dll</li>
+  <li>SharpLibWin32.dll</li>
+  <li>System.Buffers.dll</li>
+  <li>System.Memory.dll</li>
+  <li>System.Numerics.Vectors.dll</li>
+  <li>System.Resources.Extensions.dll</li>
+  <li>System.Runtime.CompilerServices.Unsafe.dll</li>
+  <li>Tabmate Relay.exe</li>
+  <li>Tabmate  Relay.exe.config</li>
+  <li>Tabmate Relay.pdb</li>
+  <li>Utils.dll</li>
+  <li>Utils.pdb</li>
+  <li>WindowsInput.dll</li>
+  <li>Help</li>
+  <li>InTheHand.Net.Bluetooth.dll</li>
+  <li>LICENSE</li>
+</ul>
+<p>To uninstall, just delete these files.</p>
+<p><a name="Acknowledgements" id="Acknowledgements"></a><strong>Acknowledgements</strong></p>
+<p>Tabmate Relay uses the NuGet packages <a href="https://github.com/Slion/SharpLibHid">Silons.SharpLib.Hid-x64</a>, <a href="https://github.com/michaelnoonan/inputsimulator">InputSimulator</a>, <a href="https://www.newtonsoft.com/json">Newtonsoft.Json</a>, and Systems.Resources.Extensions from Microsoft. The Tabmate is a product of <a href="https://www.clipstudio.net/promotion/tabmate/en/">Celsys</a>. </p>
+</body>
+</html>
