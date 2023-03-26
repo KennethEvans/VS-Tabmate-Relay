@@ -8,6 +8,9 @@ Tabmate Relay, is a C# Windows application designed to talk to the Tabmate and t
 For more information see:
 See https://kenevans.net/opensource/TabmateRelay/Help/Overview.html
 
+Sample Configuration Files
+See https://github.com/KennethEvans/VS-Tabmate-Relay/tree/master/Tabmate%20Relay/Sample%20Configuration
+
 **Installation**
 
 If you are installing from a download, just unzip the files into a directory somewhere convenient. Then run it from there. If you are installing from a build, copy these files and directories from the bin/Release directory to a convenient directory.

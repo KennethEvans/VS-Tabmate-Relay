@@ -1,0 +1,61 @@
+Button	Page	Number	Name	Label	KeyString	Type
+0	0	0	Button +	Test A0	A0	NORMAL
+1	0	1	Button -	Test A1	A1	NORMAL
+2	0	2	Button A	Test A2	A2	NORMAL
+3	0	3	Button B	Test A3	A3	NORMAL
+4	0	4	Button C	Test A4	A4	NORMAL
+5	0	5	Button D	Test A5	A5	NORMAL
+6	0	6	Wheel Up	Test A6	A6	NORMAL
+7	0	7	Wheel Down	Test A7	A7	NORMAL
+8	0	8	Wheel Push	Test A8	A8	NORMAL
+9	0	9	Trigger	Test A9	A9	NORMAL
+10	0	10	Pad Up	Test A10	A10	NORMAL
+11	0	11	Pad Down	Test A11	A11	NORMAL
+12	0	12	Pad Right	Test A12	A12	NORMAL
+13	0	13	Pad Left	Test A13	A13	NORMAL
+14	0	14	Pad Middle	Test A14	A14	NORMAL
+15	1	0	Button +	Test B0	B0	NORMAL
+16	1	1	Button -	Test B1	B1	NORMAL
+17	1	2	Button A	Test B2	B2	NORMAL
+18	1	3	Button B	Test B3	B3	NORMAL
+19	1	4	Button C	Test B4	B4	NORMAL
+20	1	5	Button D	Test B5	B5	NORMAL
+21	1	6	Wheel Up	Test B6	B6	NORMAL
+22	1	7	Wheel Down	Test B7	B7	NORMAL
+23	1	8	Wheel Push	Test B8	B8	NORMAL
+24	1	9	Trigger	Test B9	B9	NORMAL
+25	1	10	Pad Up	Test B10	B10	NORMAL
+26	1	11	Pad Down	Test B11	B11	NORMAL
+27	1	12	Pad Right	Test B12	B12	NORMAL
+28	1	13	Pad Left	Test B13	B13	NORMAL
+29	1	14	Pad Middle	Test B14	B14	NORMAL
+30	2	0	Button +	Test C0	C0	NORMAL
+31	2	1	Button -	Test C1	C1	NORMAL
+32	2	2	Button A	Test C2	C2	NORMAL
+33	2	3	Button B	Test C3	C3	NORMAL
+34	2	4	Button C	Test C4	C4	NORMAL
+35	2	5	Button D	Test C5	C5	NORMAL
+36	2	6	Wheel Up	Test C6	C6	NORMAL
+37	2	7	Wheel Down	Test C7	C7	NORMAL
+38	2	8	Wheel Push	Test C8	C8	NORMAL
+39	2	9	Trigger	Test C9	C9	NORMAL
+40	2	10	Pad Up	Test C10	C10	NORMAL
+41	2	11	Pad Down	Test C11	C11	NORMAL
+42	2	12	Pad Right	Test C12	C12	NORMAL
+43	2	13	Pad Left	Test C13	C13	NORMAL
+44	2	14	Pad Middle	Test C14	C14	NORMAL
+45	3	0	Button +	Test D0	D0	NORMAL
+46	3	1	Button -	Test D1	D1	NORMAL
+47	3	2	Button A	Test D2	D2	NORMAL
+48	3	3	Button B	Test D3	D3	NORMAL
+49	3	4	Button C	Test D4	D4	NORMAL
+50	3	5	Button D	Test D5	D5	NORMAL
+51	3	6	Wheel Up	Test D6	D6	NORMAL
+52	3	7	Wheel Down	Test D7	D7	NORMAL
+53	3	8	Wheel Push	Test D8	D8	NORMAL
+54	3	9	Trigger	Test D9	D9	NORMAL
+55	3	10	Pad Up	Test D10	D10	NORMAL
+56	3	11	Pad Down	Test D11	D11	NORMAL
+57	3	12	Pad Right	Test D12	D12	NORMAL
+58	3	13	Pad Left	Test D13	D13	NORMAL
+59	3	14	Pad Middle	Test D14	D14	NORMAL
