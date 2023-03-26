@@ -5,11 +5,11 @@ Celsys, the makers of Clip Studio Paint (CSP) also make a device called the Tabm
 
 Tabmate Relay, is a C# Windows application designed to talk to the Tabmate and translate the button presses into key combinations that can be received by whatever application is in focus at the time (the Active Window). You configure in Tabmate Relay what sequences you want to be associated with which button press. The other program could be any program, not necessarily an art application.
 
-For more information see:
+For more information:
 See https://kenevans.net/opensource/TabmateRelay/Help/Overview.html
 
-Sample Configuration Files
-See https://github.com/KennethEvans/VS-Tabmate-Relay/tree/master/Tabmate%20Relay/Sample%20Configuration
+Sample Configuration files:
+See https://github.com/KennethEvans/VS-Tabmate-Relay/tree/master/Tabmate%20Relay/Sample%20Configurations
 
 **Installation**
 
