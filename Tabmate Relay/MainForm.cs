@@ -5,7 +5,7 @@
 using InTheHand.Net.Sockets;
 # endif
 using KEUtils.About;
-using KEUtils.ScrolledHTML;
+using KEUtils.ScrolledHTML2;
 using KEUtils.ScrolledText;
 using KEUtils.Utils;
 using Newtonsoft.Json;
@@ -42,7 +42,7 @@ namespace TabmateRelay {
         const int MAX_EVENTS_PER_PERIOD = 10;
         const int PERIOD_DURATION_MS = 500;
 
-        private static ScrolledHTMLDialog overviewDlg;
+        private static ScrolledHTMLDialog2 overviewDlg;
 
 
         private bool logOn = true;
@@ -520,7 +520,7 @@ namespace TabmateRelay {
             // Create, show, or set visible the overview dialog as appropriate
             if (overviewDlg == null) {
                 MainForm app = (MainForm)FindForm().FindForm();
-                overviewDlg = new ScrolledHTMLDialog(
+                overviewDlg = new ScrolledHTMLDialog2(
                     Utils.getDpiAdjustedSize(app, new Size(800, 600)),
                     "Overview", @"Help\Overview.html");
                 overviewDlg.Show();

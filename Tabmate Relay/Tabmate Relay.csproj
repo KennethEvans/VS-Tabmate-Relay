@@ -1,28 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-      <OutputType>WinExe</OutputType>
-      <TargetFramework>net48</TargetFramework>
-      <UseWindowsForms>true</UseWindowsForms>
-      <Authors>Kenneth Evans</Authors>
-      <Description>If this program works, it was written by Kenneth Evans.</Description>
-      <Copyright>Copyright © Kenneth Evans 2023</Copyright>
-      <RootNamespace>TabmateRelay</RootNamespace>
-      <AssemblyName>Tabmate Relay</AssemblyName>
-      <PackageId>Tabmate Relay</PackageId>
-      <Company>kenevans.net</Company>
-      <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
-      <Platforms>AnyCPU;x64;x86</Platforms>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Version>1.1.0</Version>
+    <Company>kenevans.net</Company>
+    <Copyright>Copyright © Kenneth Evans 2023</Copyright>
+    <Authors>Kenneth Evans</Authors>
+    <Description>If this program works, it was written by Kenneth Evans.</Description>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <RootNamespace>TabmateRelay</RootNamespace>
+    <AssemblyName>Tabmate Relay</AssemblyName>
+    <PackageId>Tabmate Relay</PackageId>
+    <Company>kenevans.net</Company>
+    <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+    <Platforms>AnyCPU;x64;x86</Platforms>
 	  <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 	  <ApplicationManifest>App.manifest</ApplicationManifest>
 	  <StartupObject>TabmateRelay.Program</StartupObject>
 	  <ApplicationIcon>Tabmate Relay.ico</ApplicationIcon>
-	  <PlatformTarget>x64</PlatformTarget>  
+	  <PlatformTarget>AnyCPU</PlatformTarget>  
   </PropertyGroup>
   <ItemGroup>
     <Content Include="Tabmate Relay.ico" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="InputSimulator" Version="1.0.4" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1774.30" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="Slions.SharpLib.Hid-x64" Version="1.6.1" />
     <PackageReference Include="System.Resources.Extensions" Version="7.0.0" />
